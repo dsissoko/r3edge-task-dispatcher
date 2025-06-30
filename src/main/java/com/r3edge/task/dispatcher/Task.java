@@ -3,6 +3,7 @@ package com.r3edge.task.dispatcher;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 import java.util.Map;
 
@@ -12,8 +13,11 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Task {
     private String id;
     private String type;
+    @Builder.Default
+    private boolean enabled = true;
     private Map<String, Object> meta;
 }

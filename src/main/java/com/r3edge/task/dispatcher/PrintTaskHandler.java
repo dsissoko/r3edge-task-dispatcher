@@ -9,6 +9,7 @@ import java.util.Map;
  * Handler de test qui affiche un message depuis les métadonnées.
  */
 @Slf4j
+
 @Component
 public class PrintTaskHandler implements TaskHandler {
 

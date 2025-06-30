@@ -16,6 +16,9 @@ public class YamlTaskLoader {
 
     public static List<Task> loadTasks(InputStream input) throws Exception {
         Task[] tasks = MAPPER.readValue(input, Task[].class);
+        if (tasks == null) {
+            return java.util.Collections.emptyList();
+        }
         return Arrays.asList(tasks);
     }
 }

@@ -18,10 +18,14 @@ public class TaskDispatcher {
      * Dispatch une tâche en la déléguant au handler correspondant à son type.
      */
     public void dispatch(Task task) {
+        if (!task.isEnabled()) {
+            log.info("La tâche {} est désactivée, elle ne sera pas exécutée.", task.getId());
+            return;
+        }
+
         TaskHandler handler = registry.getHandler(task.getType());
         if (handler == null) {
-            log.warn("Aucun handler trouvé pour le type de tâche : {}", task.getType());
-            return;
+            throw new TaskExecutionException("No handler found for task type: " + task.getType());
         }
 
         try {
@@ -29,6 +33,7 @@ public class TaskDispatcher {
             handler.handle(task);
         } catch (Exception e) {
             log.error("Erreur lors de l'exécution de la tâche {}", task.getId(), e);
+            throw new TaskExecutionException("Failed to execute task " + task.getId(), e);
         }
     }
 }
