@@ -1,0 +1,4 @@
+- id: task-001
+  type: print
+  meta:
+    message: "Hello from test"
