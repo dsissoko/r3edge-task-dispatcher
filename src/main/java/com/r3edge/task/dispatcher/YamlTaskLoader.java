@@ -10,6 +10,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 /**
  * Utilitaire pour charger les tâches depuis un fichier YAML.
  */
+@Deprecated
 public class YamlTaskLoader {
 
     private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory());
