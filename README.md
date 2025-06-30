@@ -1,4 +1,4 @@
-# spring-task-dispatcher | ![Logo](logo_ds.png)
+# r3edge-task-dispatcher | ![Logo](logo_ds.png)
 Librairie Spring Boot pour le dispatch de tâches typées définies dans un fichier YAML.  
 Les tâches sont exécutées ou planifiées automatiquement au démarrage du service, avec un support optionnel pour l'exécution exclusive via un mécanisme de lock distribué (ex: ShedLock).
 
