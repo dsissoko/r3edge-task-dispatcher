@@ -43,6 +43,7 @@ repositories {
     gradlePluginPortal()
 }
 
+
 dependencies {
     // Annotations et runtime
     compileOnly 'org.projectlombok:lombok'
@@ -115,6 +116,15 @@ publishing {
             version = project.version
 
             from components.java
+            
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionResult()
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
         }
     }
     repositories {
