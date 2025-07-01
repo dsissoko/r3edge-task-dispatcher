@@ -1,4 +1,4 @@
-package com.r3edge.task.dispatcher;
+package com.r3edge.tasks.dispatcher;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,5 +19,7 @@ public class Task {
     private String type;
     @Builder.Default
     private boolean enabled = true;
+    @Builder.Default
+    private boolean hotReload = false;
     private Map<String, Object> meta;
 }

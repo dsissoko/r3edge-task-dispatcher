@@ -1,4 +1,4 @@
-package com.r3edge.task.dispatcher;
+package com.r3edge.tasks.dispatcher;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +25,7 @@ public class TaskDispatcher {
 
         TaskHandler handler = registry.getHandler(task.getType());
         if (handler == null) {
+            log.warn("⚠️ Aucun handler trouvé pour le type '{}', tâche {} ignorée", task.getType(), task.getId());
             throw new TaskExecutionException("No handler found for task type: " + task.getType());
         }
 
