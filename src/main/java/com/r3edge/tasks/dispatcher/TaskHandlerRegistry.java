@@ -17,6 +17,11 @@ public class TaskHandlerRegistry {
 
 	private final Map<String, TaskHandler> handlerMap = new HashMap<>();
 
+	/**
+	 * Initialise le registre avec la liste des handlers présents dans le contexte Spring.
+	 *
+	 * @param handlers liste des gestionnaires de tâches à enregistrer
+	 */
 	public TaskHandlerRegistry(List<TaskHandler> handlers) {
 		for (TaskHandler handler : handlers) {
 			handlerMap.put(handler.getType(), handler);
@@ -26,6 +31,9 @@ public class TaskHandlerRegistry {
 
 	/**
 	 * Récupère un handler pour un type de tâche donné.
+	 *
+	 * @param type le type de tâche
+	 * @return le handler correspondant, ou {@code null} si aucun n'est trouvé
 	 */
 	public TaskHandler getHandler(String type) {
 		return handlerMap.get(type);
@@ -33,6 +41,8 @@ public class TaskHandlerRegistry {
 
 	/**
 	 * Enregistre dynamiquement un nouveau handler.
+	 *
+	 * @param handler le gestionnaire de tâche à enregistrer
 	 */
 	public void addHandler(TaskHandler handler) {
 		handlerMap.put(handler.getType(), handler);

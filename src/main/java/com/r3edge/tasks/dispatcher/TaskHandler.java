@@ -6,12 +6,16 @@ package com.r3edge.tasks.dispatcher;
  */
 public interface TaskHandler {
     /**
-     * Retourne le type de tâche que ce handler peut traiter.
+     * Retourne le type de tâche que ce gestionnaire peut traiter.
+     *
+     * @return le type de tâche sous forme de chaîne
      */
     String getType();
 
     /**
-     * Méthode exécutée lorsqu'une tâche est dispatchée à ce handler.
+     * Traite la tâche spécifiée.
+     *
+     * @param task la tâche à traiter
      */
     void handle(Task task);
     

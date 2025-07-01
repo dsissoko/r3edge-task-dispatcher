@@ -11,6 +11,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Représente la configuration des tâches chargée dynamiquement
+ * via Spring Cloud Config ou des fichiers YAML locaux.
+ */
 @Getter
 @Setter
 @Slf4j
@@ -20,6 +24,10 @@ public class TaskConfiguration {
 
     private List<Task> definitions = new ArrayList<>();
 
+    /**
+     * Méthode appelée automatiquement après l’initialisation du bean Spring.
+     * Peut être utilisée pour valider ou ajuster la configuration chargée.
+     */
     @PostConstruct
     public void postConstruct() {
         log.debug("Tasks configuration chargée avec {} tasks", definitions.size());

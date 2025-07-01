@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Écouteur Spring déclenché lors du rafraîchissement du scope {@code @RefreshScope}.
+ * Permet de redéclencher ou mettre à jour dynamiquement certaines tâches si nécessaire.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor

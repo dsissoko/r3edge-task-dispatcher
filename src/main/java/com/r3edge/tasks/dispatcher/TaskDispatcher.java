@@ -16,6 +16,8 @@ public class TaskDispatcher {
 
     /**
      * Dispatch une tâche en la déléguant au handler correspondant à son type.
+     *
+     * @param task la tâche à exécuter
      */
     public void dispatch(Task task) {
         if (!task.isEnabled()) {
