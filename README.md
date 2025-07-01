@@ -10,7 +10,6 @@ Les tâches sont exécutées ou planifiées automatiquement au démarrage du ser
 - Support des tâches immédiates ou planifiées (cron)
 - Association de chaque type à un handler Spring
 - Support optionnel du lock distribué
-- Idempotence à l'exécution
 - 🔥 Mise à jour dynamique à chaud des tâches (hot-reload)
 
 ## 🧱 Définition d'une tâche (YAML)
