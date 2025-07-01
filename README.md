@@ -85,3 +85,5 @@ dependencies {
 
 Les handlers sont testables indépendamment.  
 Un utilitaire permet de simuler un dispatch manuel dans vos tests unitaires sans activer le scheduler.
+
+[![Build and Test - r3edge-task-dispatcher](https://github.com/dsissoko/r3edge-task-dispatcher/actions/workflows/cicd_code.yml/badge.svg)](https://github.com/dsissoko/r3edge-task-dispatcher/actions/workflows/cicd_code.yml)
