@@ -137,17 +137,6 @@ publishing {
                 password = project.findProperty("gpr.key") ?: System.getenv("TWEAKED_PAT")
             }
         }
-        maven {
-            name = "Buildkite"
-            url = uri("https://packages.buildkite.com/r3edge/r3edge-libs/maven2/")
-            authentication {
-                header(HttpHeaderAuthentication)
-            }
-            credentials(HttpHeaderCredentials) {
-                name = "Authorization"
-                value = "Bearer ${project.findProperty('BK_TOKEN') ?: System.getenv('BK_TOKEN')}"
-            }
-        }
     }
 }
 
