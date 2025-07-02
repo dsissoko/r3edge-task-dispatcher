@@ -76,7 +76,7 @@ Ajoutez la dépendance dans votre `build.gradle` :
 
 ```groovy
 dependencies {
-    implementation "com.r3edge:task-dispatcher:1.0.0"
+    implementation "com.r3edge:task-dispatcher:0.0.1"
 }
 ```
 
