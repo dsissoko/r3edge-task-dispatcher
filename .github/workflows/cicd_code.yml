@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feat/minimal-task-dispatcher
     paths-ignore:
       - 'docs/**'
       - '**/*.md'
