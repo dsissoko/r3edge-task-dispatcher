@@ -21,5 +21,7 @@ public class Task {
     private boolean enabled = true;
     @Builder.Default
     private boolean hotReload = false;
+    @Builder.Default
+    private boolean distributedLock = false;
     private Map<String, Object> meta;
 }

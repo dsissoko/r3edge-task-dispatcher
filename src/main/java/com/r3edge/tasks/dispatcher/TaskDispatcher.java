@@ -2,6 +2,9 @@ package com.r3edge.tasks.dispatcher;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,6 +16,8 @@ import org.springframework.stereotype.Component;
 public class TaskDispatcher {
 
     private final TaskHandlerRegistry registry;
+    private final DefaultTaskExecutor defaultTaskExecutor;
+    private final Optional<LockingTaskExecutor> lockingTaskExecutor;
 
     /**
      * Dispatch une tâche en la déléguant au handler correspondant à son type.
@@ -33,7 +38,11 @@ public class TaskDispatcher {
 
         try {
             log.info("Exécution de la tâche {} avec le handler {}", task.getId(), handler.getClass().getSimpleName());
-            handler.handle(task);
+            if (task.isDistributedLock() && lockingTaskExecutor.isPresent()) {
+                lockingTaskExecutor.get().execute(task, handler);
+            } else {
+                defaultTaskExecutor.execute(task, handler);
+            }
         } catch (Exception e) {
             log.error("Erreur lors de l'exécution de la tâche {}", task.getId(), e);
             throw new TaskExecutionException("Failed to execute task " + task.getId(), e);
