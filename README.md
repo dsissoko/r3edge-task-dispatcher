@@ -5,7 +5,7 @@ et les associer à des handlers typés exécutés automatiquement au démarrage 
 
 ---
 
-## ✅ Fonctionnalités
+## ✅ Fonctionnalités (branche feat/minimal-task-dispatcher)
 
 - 🧾 Définition déclarative des tâches dans `application.yml`
 - 🔁 Dispatch automatique au démarrage de l’application
