@@ -11,7 +11,6 @@ et les associer à des handlers typés exécutés automatiquement au démarrage 
 - 🔁 Dispatch automatique au démarrage de l’application
 - 🧩 Association de chaque type à un handler Spring (TaskHandler)
 - ♻️ Reload dynamique des tâches via /actuator/busrefresh
-- 🧼 Design minimaliste, sans dépendance au scheduling natif
 
 ---
 
@@ -52,6 +51,10 @@ public class CleanupTaskHandler implements TaskHandler {
 ```
 
 Le handler est exécuté automatiquement pour chaque tâche activée.
+
+> ⚠️ En environnement distribué (multi-instance), la librairie n’applique aucun verrouillage.  
+> À vous de gérer la synchronisation des exécutions dans vos `TaskHandler` avec l'outil de votre choix (ex. [ShedLock](https://github.com/lukas-krecan/ShedLock)).
+
 
 ---
 
