@@ -131,7 +131,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/${project.findProperty('gpr.user') ?: 'DefaultGitHubUser'}/${project.name}")
+            url = uri("https://maven.pkg.github.com/dsissoko/r3edge-task-dispatcher")
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USER")
                 password = project.findProperty("gpr.key") ?: System.getenv("TWEAKED_PAT")
