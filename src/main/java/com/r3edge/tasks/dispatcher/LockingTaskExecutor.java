@@ -26,11 +26,26 @@ public class LockingTaskExecutor {
     private final Optional<LockProvider> lockProvider;
     private final DefaultTaskExecutor defaultTaskExecutor;
 
+    /**
+     * Construit une nouvelle instance de LockingTaskExecutor.
+     *
+     * @param lockProvider        Le fournisseur de verrous distribués (optionnel).
+     * @param defaultTaskExecutor L'exécuteur de tâches par défaut.
+     */
     public LockingTaskExecutor(Optional<LockProvider> lockProvider, DefaultTaskExecutor defaultTaskExecutor) {
         this.lockProvider = lockProvider;
         this.defaultTaskExecutor = defaultTaskExecutor;
     }
 
+    /**
+     * Exécute une tâche en appliquant un verrou distribué si nécessaire.
+     * Si la tâche est configurée pour utiliser un verrou distribué et qu'un LockProvider est disponible,
+     * une tentative de verrouillage est effectuée avant l'exécution.
+     * Sinon, la tâche est exécutée directement.
+     *
+     * @param task    La tâche à exécuter.
+     * @param handler Le handler responsable de la logique de la tâche.
+     */
     public void execute(Task task, TaskHandler handler) {
         if (task.isDistributedLock() && lockProvider.isPresent()) {
             log.info("Attempting to acquire distributed lock for task {}", task.getId());
