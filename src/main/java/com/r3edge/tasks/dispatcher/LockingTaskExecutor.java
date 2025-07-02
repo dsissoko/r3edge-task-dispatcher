@@ -1,27 +1,26 @@
 package com.r3edge.tasks.dispatcher;
 
-import net.javacrumbs.shedlock.core.LockProvider;
-import net.javacrumbs.shedlock.core.LockConfiguration;
-import net.javacrumbs.shedlock.core.LockAssert;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Condition;
-import org.springframework.context.annotation.ConfigurationCondition;
-import org.springframework.context.annotation.ConditionContext;
-import org.springframework.core.type.AnnotatedTypeMetadata;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
+
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.stereotype.Component;
+
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.core.LockConfiguration;
+import net.javacrumbs.shedlock.core.LockProvider;
 
 /**
  * Executor that applies distributed locking using ShedLock if a LockProvider is available
  * and the task is configured for distributed locking.
  */
 @Slf4j
-@Component
-@Conditional(LockingTaskExecutor.LockProviderCondition.class)
+//@Component
+//@Conditional(LockingTaskExecutor.LockProviderCondition.class)
 public class LockingTaskExecutor {
 
     private final Optional<LockProvider> lockProvider;
@@ -49,8 +48,6 @@ public class LockingTaskExecutor {
             if (lock.isPresent()) {
                 try {
                     log.info("Distributed lock acquired for task {}", task.getId());
-                    // Assert that the lock is held (useful for debugging/validation)
-                    LockAssert.assertLocked();
                     defaultTaskExecutor.execute(task, handler);
                 } finally {
                     lock.get().unlock();

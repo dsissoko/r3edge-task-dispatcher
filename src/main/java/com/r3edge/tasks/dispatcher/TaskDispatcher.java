@@ -38,8 +38,13 @@ public class TaskDispatcher {
 
         try {
             log.info("Exécution de la tâche {} avec le handler {}", task.getId(), handler.getClass().getSimpleName());
-            if (task.isDistributedLock() && lockingTaskExecutor.isPresent()) {
-                lockingTaskExecutor.get().execute(task, handler);
+
+            if (task.isDistributedLock()) {
+                if (lockingTaskExecutor.isPresent()) {
+                    lockingTaskExecutor.get().execute(task, handler);
+                } else {
+                    throw new TaskExecutionException("Distributed lock requested but no LockProvider configured for task " + task.getId());
+                }
             } else {
                 defaultTaskExecutor.execute(task, handler);
             }
