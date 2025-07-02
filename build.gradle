@@ -118,6 +118,18 @@ publishing {
 
             from components.java
             
+            pom {
+                name = 'r3edge-task-dispatcher'
+                description = 'Une librairie Spring Boot simple pour définir des tâches dans un fichier YAML et les associer à des handlers typés exécutés automatiquement au démarrage ou via un hot-reload.'
+                url = 'https://github.com/dsissoko/r3edge-task-dispatcher'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+            }
+            
             versionMapping {
                 usage('java-api') {
                     fromResolutionResult()
