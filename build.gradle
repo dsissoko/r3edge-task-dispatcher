@@ -57,10 +57,6 @@ dependencies {
     api 'org.springframework.boot:spring-boot-starter-aop'
     api 'org.springframework.cloud:spring-cloud-starter'
 
-    // ShedLock for distributed locking
-    implementation 'net.javacrumbs.shedlock:shedlock-spring:6.9.0'
-    implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc:6.9.0'
-    testImplementation 'com.h2database:h2:2.2.224'
 
     // Pour les tests
     testAnnotationProcessor 'org.projectlombok:lombok'
@@ -69,9 +65,6 @@ dependencies {
     testImplementation 'org.assertj:assertj-core'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.cloud:spring-cloud-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    testImplementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.9.0'
-
 }
 
 test {

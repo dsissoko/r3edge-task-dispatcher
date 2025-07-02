@@ -2,6 +2,7 @@ package com.r3edge.tasks.dispatcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import java.util.Map;
@@ -172,5 +173,52 @@ class TaskConfigurationIntegrationTest {
                 .contains("id=task-update-test")
                 .contains("ancien=Ancien message")
                 .contains("nouveau=Nouveau message");
+    }
+    
+    /**
+     * Ce test vérifie qu’une tâche désactivée n’est pas exécutée,
+     * et donc qu’aucun handler n’est appelé même si un LockProvider est attendu.
+     */
+    @Test
+    void shouldNotExecuteDisabledTask(CapturedOutput output) {
+        // Given
+        Task disabledTask = Task.builder()
+                .id("disabled-task")
+                .type("print")
+                .enabled(false) // 🚫
+                .distributedLock(true) // même avec lock demandé
+                .meta(Map.of("message", "Ne pas exécuter"))
+                .build();
+
+        // When
+        dispatcher.dispatch(disabledTask);
+
+        // Then
+        assertThat(output.getOut())
+                .contains("est désactivée, elle ne sera pas exécutée")
+                .doesNotContain("📣 PrintTaskHandler exécuté");
+    }
+
+    /**
+     * Ce test vérifie que le dispatcher échoue correctement
+     * si on lui donne un type de tâche inconnu (sans handler enregistré).
+     */
+    @Test
+    void shouldFailWhenNoHandlerFound(CapturedOutput output) {
+        // Given
+        Task unknownTask = Task.builder()
+                .id("unknown-handler")
+                .type("unknown-type")
+                .enabled(true)
+                .distributedLock(false)
+                .build();
+
+        // When + Then
+        assertThatThrownBy(() -> dispatcher.dispatch(unknownTask))
+                .isInstanceOf(TaskExecutionException.class)
+                .hasMessageContaining("No handler found");
+
+        assertThat(output.getOut())
+                .contains("⚠️ Aucun handler trouvé pour le type");
     }
 }

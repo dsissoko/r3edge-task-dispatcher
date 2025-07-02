@@ -1,2 +1,1 @@
 com.r3edge.tasks.autoconfig.TaskDispatcherAutoConfiguration
-com.r3edge.tasks.autoconfig.LockingTaskExecutorAutoConfiguration
