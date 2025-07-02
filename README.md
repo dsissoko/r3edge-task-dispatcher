@@ -1,20 +1,21 @@
 # r3edge-task-dispatcher | ![Logo](logo_ds.png)
 
-Librairie Spring Boot pour le dispatch de tâches typées définies dans un fichier YAML.  
-Les tâches sont exécutées ou planifiées automatiquement au démarrage du service, avec un support optionnel pour l'exécution exclusive via un mécanisme de lock distribué (ex: ShedLock).
+Une librairie Spring Boot simple pour définir des tâches dans un fichier YAML  
+et les associer à des handlers typés exécutés automatiquement au démarrage ou via un hot-reload.
+
+---
 
 ## ✅ Fonctionnalités
 
-- Déclaration simple des tâches via YAML
-- Dispatch automatique au démarrage
-- Support des tâches immédiates ou planifiées (cron)
-- Association de chaque type à un handler Spring
-- Support optionnel du lock distribué
-- 🔥 Mise à jour dynamique à chaud des tâches (hot-reload)
+- 🧾 Définition déclarative des tâches dans `application.yml`
+- 🔁 Dispatch automatique au démarrage de l’application
+- 🧩 Association de chaque type à un handler Spring (`TaskHandler`)
+- ♻️ Reload dynamique des tâches via `/actuator/busrefresh`
+- 🧼 Design minimaliste, sans dépendance au scheduling natif
 
-## 🧱 Définition d'une tâche (YAML)
+---
 
-Les tâches sont définies sous la clé `r3edge.tasks.definitions` :
+## 🔧 Exemple de configuration YAML
 
 ```yaml
 r3edge:
@@ -22,57 +23,56 @@ r3edge:
     definitions:
       - id: cleanup-temp
         type: cleanup
-        cron: "0 0 * * *"
         enabled: true
         hotReload: true
 ```
 
-| Champ       | Obligatoire | Description                                                                |
-|-------------|-------------|----------------------------------------------------------------------------|
-| `id`        | ✅           | Identifiant unique de la tâche                                             |
-| `type`      | ✅           | Type logique associé à un handler                                          |
-| `cron`      | ❌           | Expression cron pour planification (sinon, exécution immédiate)            |
-| `enabled`   | ❌           | Activation explicite (`true` par défaut)                                   |
-| `hotReload` | ❌           | Autorise la mise à jour dynamique à chaud (`false` par défaut)             |
+| Champ        | Obligatoire | Description                                              |
+|--------------|-------------|----------------------------------------------------------|
+| `id`         | ✅           | Identifiant unique de la tâche                          |
+| `type`       | ✅           | Type logique lié à un handler                           |
+| `enabled`    | ❌           | Activation explicite (`true` par défaut)                |
+| `hotReload`  | ❌           | Autorise la mise à jour dynamique (`false` par défaut)  |
+
+---
 
 ## 🧩 Handlers
 
-Chaque type est associé à un bean Spring qui implémente l'interface `TaskHandler<T>`.
+Chaque type logique est lié à un bean Spring qui implémente `TaskHandler`.
 
 ```java
 @Component
-public class CleanupTaskHandler implements TaskHandler<CleanupTaskDefinition> {
+public class CleanupTaskHandler implements TaskHandler {
     @Override
-    public void handle(CleanupTaskDefinition task) {
+    public void handle(Task task) {
         // logique métier ici
     }
 }
 ```
 
-## 🔐 Exécution exclusive
+Le handler est exécuté automatiquement pour chaque tâche activée.
 
-Un mécanisme de lock distribué (ex: ShedLock, Hazelcast...) peut être activé pour garantir l'exécution exclusive d'une tâche, même en environnement multi-instance.
+---
 
-## 🔁 Reload dynamique (hot update)
+## 🔁 Reload dynamique
 
-La librairie supporte la **mise à jour à chaud du YAML** via `Spring Cloud Bus` ou un événement `EnvironmentChangeEvent`.
+Lorsqu’un événement `EnvironmentChangeEvent` est déclenché (via Spring Cloud Bus ou autre),  
+les tâches peuvent être mises à jour à chaud.
 
-### 🔄 Comportement au reload :
+| Cas de modification        | Comportement                                  |
+|----------------------------|-----------------------------------------------|
+| Nouvelle tâche             | Dispatch immédiat                             |
+| Suppression d’une tâche    | Marquée comme désactivée                      |
+| Modification de `enabled`  | Activée ou désactivée dynamiquement           |
+| Tâche identique            | Ignorée                                       |
 
-| Cas                              | Effet déclenché                                       |
-|----------------------------------|--------------------------------------------------------|
-| 🆕 Nouvelle tâche                | Dispatch immédiat ou planification                    |
-| 🗑️ Tâche supprimée              | Marquée comme désactivée (`enabled=false`)            |
-| ✏️ Cron modifié                 | Replanification automatique                           |
-| 🚫 `enabled: false` explicite   | Tâche désactivée                                      |
-| ✅ `enabled: true`              | Réactivation si précédemment désactivée               |
-| ⏸️ Tâche identique              | Ignorée (aucune action)                               |
+⚠️ Le champ `type` (le handler) ne peut pas être modifié dynamiquement.
 
-⚠️ Le champ `type` (handler) ne peut pas être modifié dynamiquement.
+---
 
 ## 🚀 Intégration
 
-Ajouter la dépendance (exemple avec Gradle) :
+Ajoutez la dépendance dans votre `build.gradle` :
 
 ```groovy
 dependencies {
@@ -80,9 +80,6 @@ dependencies {
 }
 ```
 
-## 🧪 Tests
-
-Les handlers sont testables indépendamment.  
-Un utilitaire permet de simuler un dispatch manuel dans vos tests unitaires sans activer le scheduler.
+---
 
 [![Build and Test - r3edge-task-dispatcher](https://github.com/dsissoko/r3edge-task-dispatcher/actions/workflows/cicd_code.yml/badge.svg)](https://github.com/dsissoko/r3edge-task-dispatcher/actions/workflows/cicd_code.yml)
