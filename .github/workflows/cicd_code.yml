@@ -55,3 +55,11 @@ jobs:
         with:
           name: coverage-report
           path: build/reports
+
+
+      - name: Publish to GitHub Packages
+        if: github.ref == 'refs/heads/feat/minimal-task-dispatcher'
+        run: ./gradlew publish
+        env:
+          GITHUB_USER: ${{ github.actor }}
+          TWEAKED_PAT: ${{ secrets.GITHUB_TOKEN }}
