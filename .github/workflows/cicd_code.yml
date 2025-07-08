@@ -3,7 +3,7 @@ name: CI – Build & Publish
 on:
   push:
     branches: 
-      - main
+      - '**'          # build sur *toutes* les branches
     tags:
       - 'v*.*.*'
   pull_request:
@@ -20,6 +20,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
 
       - name: Setup Java
         uses: actions/setup-java@v3
