@@ -53,7 +53,7 @@ public class CleanupTaskHandler implements TaskHandler {
 Le handler est exécuté automatiquement pour chaque tâche activée.
 
 > ⚠️ En environnement distribué (multi-instance), la librairie n’applique aucun verrouillage.  
-> À vous de gérer la synchronisation des exécutions dans vos `TaskHandler` avec l'outil de votre choix (ex. [ShedLock](https://github.com/lukas-krecan/ShedLock)).
+> À vous de gérer la synchronisation des exécutions dans vos `TaskHandler` avec l'outil de votre choix (ex. [ShedLock](https://github.com/lukas-krecan/ShedLock) ou [Mini Lock](https://github.com/dsissoko/r3edge-mini-lock)).
 
 
 ---
@@ -114,7 +114,38 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.r3edge:r3edge-task-dispatcher:0.0.1"
+    implementation "com.r3edge:r3edge-task-dispatcher:0.0.5"
+}
+```
+
+Créer vos tâches en implémentant TaskHandler:
+
+```java
+package com.example.demo;
+
+import org.springframework.stereotype.Component;
+
+import com.r3edge.tasks.dispatcher.Task;
+import com.r3edge.tasks.dispatcher.TaskHandler;
+
+@Component
+public class CleanupTaskHandler implements TaskHandler {
+    @Override
+    public void handle(Task task) {
+        // logique métier ici
+    }
+
+    @Override
+    public String getType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void onTaskReload(Task previous, Task updated, boolean removed) {
+        // TODO Auto-generated method stub
+        
+    }
 }
 ```
 
