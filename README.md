@@ -114,7 +114,7 @@ repositories {
 
 ```groovy
 dependencies {
-    implementation "com.r3edge:r3edge-task-dispatcher:0.0.5"
+    implementation "com.r3edge:r3edge-task-dispatcher:0.0.6"
 }
 ```
 
