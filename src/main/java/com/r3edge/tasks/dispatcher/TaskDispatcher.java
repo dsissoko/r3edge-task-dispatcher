@@ -34,7 +34,7 @@ public class TaskDispatcher implements ApplicationListener<WebServerInitializedE
 		TaskHandler handler = registry.getHandler(task.getType());
 		if (handler == null) {
 			log.warn("⚠️ Aucun handler trouvé pour le type '{}', tâche {} ignorée", task.getType(), task.getId());
-			throw new TaskExecutionException("No handler found for task type: " + task.getType());
+			//throw new TaskExecutionException("No handler found for task type: " + task.getType());
 		}
 
 		try {
@@ -42,7 +42,7 @@ public class TaskDispatcher implements ApplicationListener<WebServerInitializedE
 			defaultTaskExecutor.execute(task, handler);
 		} catch (Exception e) {
 			log.error("Erreur lors de l'exécution de la tâche {}", task.getId(), e);
-			throw new TaskExecutionException("Failed to execute task " + task.getId(), e);
+			//throw new TaskExecutionException("Failed to execute task " + task.getId(), e);
 		}
 	}
 
