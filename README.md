@@ -78,7 +78,7 @@ Voici comment l'intégrer dans votre projet Gradle (local ou CI/CD).
 
 ---
 
-### 1. Déclarer le dépôt:
+### 1. Déclarer le dépôt (les packages github publiques doivent être téléchargés avec des credentials : utilisez les votres)
 
 ```groovy
 repositories {
@@ -110,7 +110,7 @@ dependencyManagement {
 
 dependencies {   
     implementation 'org.springframework.cloud:spring-cloud-starter'
-    implementation "com.r3edge:r3edge-task-dispatcher:0.0.6"
+    implementation "com.r3edge:r3edge-task-dispatcher:0.0.7"
 }
 
 ```
@@ -160,7 +160,7 @@ public class PrintTaskHandler implements TaskHandler {
         
 ```
 
-### 3. Déclarez vos tâches dans le fichier application.yml
+### 4. Déclarez vos tâches dans le fichier application.yml
 
 ```yaml
 
@@ -178,7 +178,7 @@ r3edge:
 
 ---
 
-### 🔐 4. Lancez votre service
+### 🔐 5. Lancez votre service
 
  - au démarrage vos tâches sont prises en charge directement
 

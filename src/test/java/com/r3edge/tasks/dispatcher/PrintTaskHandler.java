@@ -12,12 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class PrintTaskHandler implements TaskHandler {
 
-	@Override
-	public String getId() {
-		// TODO Auto-generated method stub
-		return "1234RRR";
-	}
-
     @Override
     public String getType() {
         return "print";
