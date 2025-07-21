@@ -15,7 +15,10 @@ import com.r3edge.tasks.TestApplication;
 
 import lombok.extern.slf4j.Slf4j;
 
-@SpringBootTest(classes = TestApplication.class)
+@SpringBootTest(
+	    classes = TestApplication.class,
+	    webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT
+	)
 @Slf4j
 class TaskConfigurationIntegrationTest {
 
@@ -53,7 +56,6 @@ class TaskConfigurationIntegrationTest {
                 .id("task-001")
                 .type("print")
                 .enabled(true)
-                .hotReload(true)
                 .meta(Map.of("message", "Hello from test"))
                 .build();
 
@@ -61,14 +63,12 @@ class TaskConfigurationIntegrationTest {
                 .id("task-002")
                 .type("print")
                 .enabled(false)
-                .hotReload(true)
                 .meta(Map.of("message", "This should not be printed"))
                 .build();
 
         Task task3 = Task.builder()
                 .id("task-003")
                 .type("unknown-type")
-                .hotReload(true)
                 .meta(Map.of("data", "some data"))
                 .build();
 
@@ -89,7 +89,6 @@ class TaskConfigurationIntegrationTest {
                 .id("task-print-delete")
                 .type("print")
                 .enabled(true)
-                .hotReload(true)
                 .meta(Map.of("message", "To be removed"))
                 .build();
 
@@ -108,7 +107,6 @@ class TaskConfigurationIntegrationTest {
                 .id("task-already-there")
                 .type("print")
                 .enabled(true)
-                .hotReload(true)
                 .meta(Map.of("message", "Je suis déjà là"))
                 .build();
 
@@ -120,7 +118,6 @@ class TaskConfigurationIntegrationTest {
                 .id("task-print-new")
                 .type("print")
                 .enabled(true)
-                .hotReload(true)
                 .meta(Map.of("message", "Je suis nouveau"))
                 .build();
 
@@ -137,7 +134,6 @@ class TaskConfigurationIntegrationTest {
                 .id("task-update-test")
                 .type("print")
                 .enabled(true)
-                .hotReload(true)
                 .meta(Map.of("message", "Ancien message"))
                 .build();
 
@@ -148,7 +144,6 @@ class TaskConfigurationIntegrationTest {
                 .id("task-update-test")
                 .type("print")
                 .enabled(true)
-                .hotReload(true)
                 .meta(Map.of("message", "Nouveau message"))
                 .build();
 
@@ -166,7 +161,6 @@ class TaskConfigurationIntegrationTest {
                 .id("disabled-task")
                 .type("print")
                 .enabled(false)
-                .distributedLock(true)
                 .meta(Map.of("message", "Ne pas exécuter"))
                 .build();
 
@@ -179,7 +173,6 @@ class TaskConfigurationIntegrationTest {
                 .id("unknown-handler")
                 .type("unknown-type")
                 .enabled(true)
-                .distributedLock(false)
                 .build();
 
         assertThatThrownBy(() -> dispatcher.dispatch(unknownTask))

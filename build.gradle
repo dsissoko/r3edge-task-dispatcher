@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'com.r3edge'
-version = '0.0.6'
+version = '0.0.7'
 
 base {
     archivesName = 'r3edge-task-dispatcher'
@@ -68,6 +68,7 @@ dependencies {
     testImplementation 'org.springframework.cloud:spring-cloud-context:4.3.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+    testImplementation 'org.springframework:spring-web'
 
 }
 

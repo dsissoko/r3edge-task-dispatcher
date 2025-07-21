@@ -1,5 +1,7 @@
 package com.r3edge.tasks.dispatcher;
 
+import org.springframework.boot.web.context.WebServerInitializedEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -12,10 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TaskDispatcher {
+public class TaskDispatcher implements ApplicationListener<WebServerInitializedEvent> {
 
 	private final TaskHandlerRegistry registry;
 	private final DefaultTaskExecutor defaultTaskExecutor;
+	private final TaskConfiguration taskConfiguration;
 
 	/**
 	 * Dispatch une tâche en la déléguant au handler correspondant à son type.
@@ -41,5 +44,13 @@ public class TaskDispatcher {
 			log.error("Erreur lors de l'exécution de la tâche {}", task.getId(), e);
 			throw new TaskExecutionException("Failed to execute task " + task.getId(), e);
 		}
+	}
+
+	@Override
+	public void onApplicationEvent(WebServerInitializedEvent event) {
+		taskConfiguration.getDefinitions().forEach(t -> {
+			log.debug("Lancement automatique de {}", t);
+			dispatch(t);
+		});
 	}
 }

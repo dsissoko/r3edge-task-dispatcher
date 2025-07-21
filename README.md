@@ -1,7 +1,7 @@
 # r3edge-task-dispatcher | ![Logo](logo_ds.png)
 
-Une librairie Spring Boot simple pour définir des tâches dans un fichier YAML  
-et les associer à des handlers typés exécutés automatiquement au démarrage ou via un hot-reload.
+Une librairie Spring Boot de confort permettant de définir des tâches dans un fichier YAML  
+et les associer à des handlers typés exécutés automatiquement au démarrage.
 
 ---
 
@@ -10,7 +10,6 @@ et les associer à des handlers typés exécutés automatiquement au démarrage 
 - 🧾 Définition déclarative des tâches dans application.yml
 - 🔁 Dispatch automatique au démarrage de l’application
 - 🧩 Association de chaque type à un handler Spring (TaskHandler)
-- ♻️ Reload dynamique des tâches via /actuator/busrefresh
 
 ---
 
@@ -21,18 +20,20 @@ et les associer à des handlers typés exécutés automatiquement au démarrage 
 r3edge:
   tasks:
     definitions:
-      - id: cleanup-temp
-        type: cleanup
+      - id: handler1
+        type: printHandler
         enabled: true
-        hotReload: true
+        meta:
+            - prop1: val1
+            - prop2: val2
 ```
 
 | Champ        | Obligatoire | Description                                              |
 |--------------|-------------|----------------------------------------------------------|
 | id         | ✅           | Identifiant unique de la tâche                          |
 | type       | ✅           | Type logique lié à un handler                           |
-| enabled    | ❌           | Activation explicite (true par défaut)                |
-| hotReload  | ❌           | Autorise la mise à jour dynamique (false par défaut)  |
+| enabled    | ❌           | Exécution explicite au démarrage (true par défaut)      |
+| meta    | ❌           | liste de parametre spécifiques à la tâche      |
 
 ---
 
@@ -58,22 +59,6 @@ Le handler est exécuté automatiquement pour chaque tâche activée.
 
 ---
 
-## 🔁 Reload dynamique
-
-Lorsqu’un événement EnvironmentChangeEvent est déclenché (via Spring Cloud Bus ou autre),  
-les tâches peuvent être mises à jour à chaud.
-
-| Cas de modification        | Comportement                                  |
-|----------------------------|-----------------------------------------------|
-| Nouvelle tâche             | Dispatch immédiat                             |
-| Suppression d’une tâche    | Marquée comme désactivée                      |
-| Modification de enabled  | Activée ou désactivée dynamiquement           |
-| Tâche identique            | Ignorée                                       |
-
-⚠️ Le champ type (le handler) ne peut pas être modifié dynamiquement.
-
----
-
 ## 📦 Compatibilité
 
 ✅ Testée avec :  
@@ -93,97 +78,109 @@ Voici comment l'intégrer dans votre projet Gradle (local ou CI/CD).
 
 ---
 
-### 🔧 1. Ajoutez le repository GitHub Packages dans build.gradle
+### 1. Déclarer le dépôt:
 
 ```groovy
 repositories {
+    mavenCentral()
     maven {
         url = uri("https://maven.pkg.github.com/dsissoko/r3edge-task-dispatcher")
         credentials {
-            username = project.findProperty("gpr.user") ?: System.getenv("GPR_USER")
-            password = project.findProperty("gpr.key") ?: System.getenv("GPR_KEY")
+            username = ghUser
+            password = ghKey
         }
     }
-    mavenCentral()
 }
 ```
 
 ---
 
-### 📦 2. Ajoutez la dépendance
+### 2. Ajoutez la dépendance
 
 ```groovy
-dependencies {
+ext {
+    set('springCloudVersion', "2025.0.0")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {   
+    implementation 'org.springframework.cloud:spring-cloud-starter'
     implementation "com.r3edge:r3edge-task-dispatcher:0.0.6"
 }
+
 ```
 
-Créer vos tâches en implémentant TaskHandler:
+### 3. Créer vos tâches en implémentant TaskHandler:
 
 ```java
-package com.example.demo;
+
+package com.r3edge.tasks.dispatcher;
 
 import org.springframework.stereotype.Component;
 
-import com.r3edge.tasks.dispatcher.Task;
-import com.r3edge.tasks.dispatcher.TaskHandler;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Handler de test qui affiche un message depuis les métadonnées.
+ */
+@Slf4j
 
 @Component
-public class CleanupTaskHandler implements TaskHandler {
+public class PrintTaskHandler implements TaskHandler {
+
     @Override
-    public void handle(Task task) {
-        // logique métier ici
+    public String getId() {
+        // TODO Auto-generated method stub
+        return "1234RRR";
     }
 
     @Override
     public String getType() {
-        // TODO Auto-generated method stub
-        return null;
+        return "print";
     }
 
     @Override
-    public void onTaskReload(Task previous, Task updated, boolean removed) {
-        // TODO Auto-generated method stub
-        
+    public void handle(Task task) {
+        String message = extractMeta(task);
+        log.info("📣 Exécution de PrintTaskHandler avec les meta suivantes: {}", message);
+    }
+    
+    private String extractMeta(Task task) {
+        if (task == null || task.getMeta() == null) return "n/a";
+        Object m = task.getMeta().get("message");
+        return m != null ? m.toString() : "n/a";
     }
 }
+
+        
 ```
 
----
-
-### 🔐 3. Authentification requise
-
-GitHub Packages **nécessite une authentification**, même pour les projets publics.
-
-Utilisez les mêmes variables gpr.user / gpr.key en local ou les équivalents GPR_USER / GPR_KEY dans les environnements CI/CD.
-
----
-
-#### ✅ En local (poste de développeur)
-
-1. Créez un [GitHub Personal Access Token (PAT)](https://github.com/settings/tokens) avec le scope read:packages.
-2. Ajoutez dans ~/.gradle/gradle.properties :
-
-```properties
-gpr.user=ton_username_github
-gpr.key=ton_token_github
-```
-
-> 💡 Ne jamais commiter ce fichier !
-
----
-
-#### ✅ En CI/CD (ex : GitHub Actions)
-
-Ajoutez dans votre pipeline :
+### 3. Déclarez vos tâches dans le fichier application.yml
 
 ```yaml
-env:
-  GPR_USER: ${{ github.actor }}
-  GPR_KEY: ${{ secrets.GITHUB_TOKEN }}
+
+r3edge:
+  tasks:
+    definitions:
+      - id: handler1
+        type: printHandler
+        enabled: true
+        meta:
+            - prop1: val1
+            - prop2: val2
+
 ```
 
-Cela permet d’utiliser les **mêmes noms de variables** que pour le développement local, sans toucher au build.gradle.
+---
+
+### 🔐 4. Lancez votre service
+
+ - au démarrage vos tâches sont prises en charge directement
 
 ---
 

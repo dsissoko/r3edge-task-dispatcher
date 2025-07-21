@@ -4,19 +4,16 @@ r3edge:
       - id: task-001
         type: print
         enabled: true
-        hotReload: true
         meta:
           message: "Hello from test"
 
       - id: task-002
         type: print
         enabled: false
-        hotReload: true
         meta:
           message: "This should not be printed"
 
       - id: task-003
         type: unknown-type
-        hotReload: true
         meta:
           data: "some data"

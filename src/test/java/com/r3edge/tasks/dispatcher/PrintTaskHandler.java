@@ -1,7 +1,5 @@
 package com.r3edge.tasks.dispatcher;
 
-import java.util.Map;
-
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class PrintTaskHandler implements TaskHandler {
 
+	@Override
+	public String getId() {
+		// TODO Auto-generated method stub
+		return "1234RRR";
+	}
+
     @Override
     public String getType() {
         return "print";
@@ -21,26 +25,11 @@ public class PrintTaskHandler implements TaskHandler {
 
     @Override
     public void handle(Task task) {
-        Map<String, Object> meta = task.getMeta();
-        String message = (meta != null) ? (String) meta.get("message") : "Aucun message";
-        log.info("📣 PrintTaskHandler exécuté : {}", message);
+        String message = extractMeta(task);
+        log.info("📣 Exécution de PrintTaskHandler avec les meta suivantes: {}", message);
     }
-
-	@Override
-	public void onTaskReload(Task previous, Task updated, boolean removed) {
-	    if (removed) {
-	        log.info("🗑️ PrintTaskHandler : tâche supprimée → id={}, message={}",
-	                previous.getId(),
-	                extractMessage(previous));
-	    } else {
-	        log.info("🔁 PrintTaskHandler : tâche rechargée → id={}, ancien={}, nouveau={}",
-	                previous.getId(),
-	                extractMessage(previous),
-	                extractMessage(updated));
-	    }
-	}
 	
-	private String extractMessage(Task task) {
+	private String extractMeta(Task task) {
 	    if (task == null || task.getMeta() == null) return "n/a";
 	    Object m = task.getMeta().get("message");
 	    return m != null ? m.toString() : "n/a";

@@ -1,11 +1,11 @@
 package com.r3edge.tasks.dispatcher;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-
-import java.util.Map;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Représente une tâche générique définie par un identifiant, un type et des métadonnées.
@@ -19,9 +19,5 @@ public class Task {
     private String type;
     @Builder.Default
     private boolean enabled = true;
-    @Builder.Default
-    private boolean hotReload = false;
-    @Builder.Default
-    private boolean distributedLock = false;
     private Map<String, Object> meta;
 }
