@@ -110,7 +110,7 @@ dependencyManagement {
 
 dependencies {   
     implementation 'org.springframework.cloud:spring-cloud-starter'
-    implementation "com.r3edge:r3edge-task-dispatcher:0.0.7"
+    implementation "com.r3edge:r3edge-task-dispatcher:0.1.0"
 }
 
 ```
