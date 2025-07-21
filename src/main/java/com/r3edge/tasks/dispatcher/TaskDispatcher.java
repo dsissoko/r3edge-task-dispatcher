@@ -35,6 +35,7 @@ public class TaskDispatcher implements ApplicationListener<WebServerInitializedE
 		if (handler == null) {
 			log.warn("⚠️ Aucun handler trouvé pour le type '{}', tâche {} ignorée", task.getType(), task.getId());
 			//throw new TaskExecutionException("No handler found for task type: " + task.getType());
+			return;
 		}
 
 		try {
