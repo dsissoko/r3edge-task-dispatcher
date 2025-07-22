@@ -45,7 +45,7 @@ public class TaskDispatcher {
         String cron = task.getCron();
         if (cron != null && taskScheduler != null) {
         	log.info("Planification de la tâche {} avec le handler {} et le scheduler {}", task.getId(), handler.getClass().getSimpleName(), taskScheduler);
-            taskScheduler.schedule(task,() -> dispatch(task));
+            taskScheduler.schedule(task,() -> handler.handle(task));
             return;
         }		
 
