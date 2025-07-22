@@ -8,8 +8,9 @@ et les associer à des handlers typés exécutés automatiquement au démarrage.
 ## ✅ Fonctionnalités
 
 - 🧾 Définition déclarative des tâches dans application.yml
-- 🔁 Dispatch automatique au démarrage de l’application
-- 🧩 Association de chaque type à un handler Spring (TaskHandler)
+- 🔁 Exécution automatique au démarrage de l’application
+- Planification automatique au démarrage (si cron)
+- Refresh automatique des données de configuration des tâches (si busrefresh avec config server mis en place)
 
 ---
 
@@ -21,11 +22,18 @@ r3edge:
   tasks:
     definitions:
       - id: handler1
-        type: printHandler
+        type: cleanup
+        enabled: true
+        cron: "0 * * * * *"
+        meta:
+          target: "bar"
+          dataset: "1,3,40"
+      - id: handler2
+        type: init
         enabled: true
         meta:
-            - prop1: val1
-            - prop2: val2
+          target: "foo"
+          other: "nice data"
 ```
 
 | Champ        | Obligatoire | Description                                              |
@@ -33,6 +41,7 @@ r3edge:
 | id         | ✅           | Identifiant unique de la tâche                          |
 | type       | ✅           | Type logique lié à un handler                           |
 | enabled    | ❌           | Exécution explicite au démarrage (true par défaut)      |
+| cron    | ❌           | Motif cron      |
 | meta    | ❌           | liste de parametre spécifiques à la tâche      |
 
 ---
@@ -43,15 +52,22 @@ Chaque type logique est lié à un bean Spring qui implémente TaskHandler.
 
 ```java
 @Component
-public class CleanupTaskHandler implements TaskHandler {
+@Slf4j
+public class Handler1 implements TaskHandler {
+
+    @Override
+    public String getType() {
+        return "cleanup";
+    }
+
     @Override
     public void handle(Task task) {
-        // logique métier ici
+        log.info("Exécution Handler1");
     }
 }
 ```
 
-Le handler est exécuté automatiquement pour chaque tâche activée.
+Au démarrage, le handler est exécuté ou planifié automatiquement pour chaque tâche activé (enabled = true).
 
 > ⚠️ En environnement distribué (multi-instance), la librairie n’applique aucun verrouillage.  
 > À vous de gérer la synchronisation des exécutions dans vos `TaskHandler` avec l'outil de votre choix (ex. [ShedLock](https://github.com/lukas-krecan/ShedLock) ou [Mini Lock](https://github.com/dsissoko/r3edge-mini-lock)).
@@ -110,7 +126,7 @@ dependencyManagement {
 
 dependencies {   
     implementation 'org.springframework.cloud:spring-cloud-starter'
-    implementation "com.r3edge:r3edge-task-dispatcher:0.1.1"
+    implementation "com.r3edge:r3edge-task-dispatcher:0.1.2"
 }
 
 ```
@@ -118,63 +134,58 @@ dependencies {
 ### 3. Créer vos tâches en implémentant TaskHandler:
 
 ```java
-
-package com.r3edge.tasks.dispatcher;
+package com.example.demo;
 
 import org.springframework.stereotype.Component;
 
+import com.r3edge.tasks.dispatcher.Task;
+import com.r3edge.tasks.dispatcher.TaskHandler;
+
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Handler de test qui affiche un message depuis les métadonnées.
- */
-@Slf4j
-
 @Component
-public class PrintTaskHandler implements TaskHandler {
+@Slf4j
+public class Handler1 implements TaskHandler {
 
     @Override
     public String getType() {
-        return "print";
+        return "cleanup";
     }
 
     @Override
     public void handle(Task task) {
-        String message = extractMeta(task);
-        log.info("📣 Exécution de PrintTaskHandler avec les meta suivantes: {}", message);
+        log.info("Lancement Handler1");
     }
-    
-    private String extractMeta(Task task) {
-        if (task == null || task.getMeta() == null) return "n/a";
-        Object m = task.getMeta().get("message");
-        return m != null ? m.toString() : "n/a";
-    }
-}
 
-        
+}      
 ```
 
 ### 4. Déclarez vos tâches dans le fichier application.yml
 
 ```yaml
-
 r3edge:
   tasks:
     definitions:
       - id: handler1
-        type: printHandler
+        type: cleanup
+        enabled: true
+        cron: "0 * * * * *"
+        meta:
+          target: "bar"
+          dataset: "1,3,40"
+      - id: handler2
+        type: init
         enabled: true
         meta:
-            - prop1: val1
-            - prop2: val2
-
+          target: "foo"
+          other: "nice data"
 ```
 
 ---
 
 ### 🔐 5. Lancez votre service
 
- - au démarrage vos tâches sont prises en charge directement
+ - Au démarrage vos tâches sont prises en charge directement (exécution ou planification)
 
 ---
 
