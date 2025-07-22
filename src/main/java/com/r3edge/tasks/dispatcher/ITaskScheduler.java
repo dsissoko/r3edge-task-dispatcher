@@ -10,6 +10,7 @@ public interface ITaskScheduler {
      * Planifie l'exécution récurrente d'une tâche selon un cron.
      *
      * @param task la tâche à planifier
+     * @param runnable méthode à planifier
      */
     void schedule(Task task, Runnable runnable);
 }

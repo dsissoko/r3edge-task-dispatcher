@@ -58,6 +58,12 @@ public class TaskDispatcher {
 		}
 	}
 
+	/**
+	 * Événement déclenché au démarrage du serveur web.
+	 * Permet de déclencher automatiquement le dispatch des tâches configurées.
+	 *
+	 * @param event l'événement de démarrage du serveur
+	 */
 	@EventListener(WebServerInitializedEvent.class)
 	public void onApplicationEvent(WebServerInitializedEvent event) {
 		taskConfiguration.getDefinitions().forEach(t -> {
@@ -66,6 +72,12 @@ public class TaskDispatcher {
 		});
 	}
 	
+	/**
+	 * Événement déclenché après un rafraîchissement de configuration.
+	 * Permet de re-dispatcher les tâches en fonction des nouvelles définitions ou cron modifiés.
+	 *
+	 * @param event l'événement de rafraîchissement du contexte {@link RefreshScope}
+	 */
 	@EventListener(RefreshScopeRefreshedEvent.class)
 	public void onRefreshEvent(RefreshScopeRefreshedEvent event) {
 		log.info("📥 Refresh détecté : redéclenchement des tâches.");

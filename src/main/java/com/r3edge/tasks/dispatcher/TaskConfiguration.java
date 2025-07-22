@@ -35,6 +35,11 @@ public class TaskConfiguration {
         log.debug("Tasks configuration chargée avec {} tasks", definitions.size());
     }
     
+    /**
+     * Méthode appelée automatiquement après un rafraîchissement du contexte
+     * provoqué par un {@link RefreshScopeRefreshedEvent}.
+     * Permet de logguer ou de déclencher des actions associées à la mise à jour.
+     */
     @EventListener(RefreshScopeRefreshedEvent.class)
     public void onRefresh() {
         log.debug("Configuration rafraîchie : {} tâches", definitions.size());
