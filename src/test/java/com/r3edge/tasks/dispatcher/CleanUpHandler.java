@@ -6,22 +6,19 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Handler de test qui affiche un message depuis les métadonnées.
- */
 @Slf4j
 @Component
-public class PrintTaskHandler implements TaskHandler {
+public class CleanUpHandler implements TaskHandler{
 
-    @Override
-    public String getType() {
-        return "print";
-    }
+	@Override
+	public String getType() {
+		return "cleanup";
+	}
 
     @Override
     public void handle(Task task) {
         String message = extractMeta(task);
-        log.info("📣 Exécution de PrintTaskHandler avec les meta suivantes: {}", message);
+        log.info("📣 Exécution de CleanUpHandler avec les meta suivantes: {}", message);
     }
 	
     private String extractMeta(Task task) {

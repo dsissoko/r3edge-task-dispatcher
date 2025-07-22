@@ -1,7 +1,9 @@
 package com.r3edge.tasks.dispatcher;
 
 import org.springframework.boot.web.context.WebServerInitializedEvent;
-import org.springframework.context.ApplicationListener;
+import org.springframework.cloud.context.scope.refresh.RefreshScopeRefreshedEvent;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -14,10 +16,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TaskDispatcher implements ApplicationListener<WebServerInitializedEvent> {
+public class TaskDispatcher {
 
 	private final TaskHandlerRegistry registry;
 	private final DefaultTaskExecutor defaultTaskExecutor;
+	@Lazy
+	private final ITaskScheduler taskScheduler;
 	private final TaskConfiguration taskConfiguration;
 
 	/**
@@ -37,6 +41,13 @@ public class TaskDispatcher implements ApplicationListener<WebServerInitializedE
 			//throw new TaskExecutionException("No handler found for task type: " + task.getType());
 			return;
 		}
+		
+        String cron = task.getCron();
+        if (cron != null && taskScheduler != null) {
+        	log.info("Planification de la tâche {} avec le handler {} et le scheduler {}", task.getId(), handler.getClass().getSimpleName(), taskScheduler);
+            taskScheduler.schedule(task,() -> dispatch(task));
+            return;
+        }		
 
 		try {
 			log.info("Exécution de la tâche {} avec le handler {}", task.getId(), handler.getClass().getSimpleName());
@@ -47,10 +58,19 @@ public class TaskDispatcher implements ApplicationListener<WebServerInitializedE
 		}
 	}
 
-	@Override
+	@EventListener(WebServerInitializedEvent.class)
 	public void onApplicationEvent(WebServerInitializedEvent event) {
 		taskConfiguration.getDefinitions().forEach(t -> {
 			log.debug("Lancement automatique de {}", t);
+			dispatch(t);
+		});
+	}
+	
+	@EventListener(RefreshScopeRefreshedEvent.class)
+	public void onRefreshEvent(RefreshScopeRefreshedEvent event) {
+		log.info("📥 Refresh détecté : redéclenchement des tâches.");
+		taskConfiguration.getDefinitions().forEach(t -> {
+			log.debug("Redispatch de la tâche {}", t);
 			dispatch(t);
 		});
 	}

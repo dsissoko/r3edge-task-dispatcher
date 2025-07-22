@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.cloud.context.scope.refresh.RefreshScopeRefreshedEvent;
+import org.springframework.context.event.EventListener;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -31,5 +33,10 @@ public class TaskConfiguration {
     @PostConstruct
     public void postConstruct() {
         log.debug("Tasks configuration chargée avec {} tasks", definitions.size());
+    }
+    
+    @EventListener(RefreshScopeRefreshedEvent.class)
+    public void onRefresh() {
+        log.debug("Configuration rafraîchie : {} tâches", definitions.size());
     }
 }

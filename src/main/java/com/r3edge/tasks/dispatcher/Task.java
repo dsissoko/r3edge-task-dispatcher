@@ -19,5 +19,7 @@ public class Task {
     private String type;
     @Builder.Default
     private boolean enabled = true;
+    @Builder.Default
+    private String cron = null;
     private Map<String, Object> meta;
 }

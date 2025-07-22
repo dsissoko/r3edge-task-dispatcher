@@ -1,3 +1,11 @@
+#server:
+#  port: 8081
+
+logging:
+  level:
+    root: INFO
+    com.r3edge: DEBUG
+
 r3edge:
   tasks:
     definitions:
@@ -14,6 +22,8 @@ r3edge:
           message: "This should not be printed"
 
       - id: task-003
-        type: unknown-type
+        type: cleanup
+        cron: "0 * * * * *"
+        enabled: true
         meta:
           data: "some data"
