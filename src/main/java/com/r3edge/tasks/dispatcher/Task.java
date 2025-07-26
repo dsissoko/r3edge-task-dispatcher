@@ -1,5 +1,6 @@
 package com.r3edge.tasks.dispatcher;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
@@ -20,6 +21,10 @@ public class Task {
     @Builder.Default
     private boolean enabled = true;
     @Builder.Default
+    private String strategy = "default";
+    @Builder.Default
     private String cron = null;
+    @Builder.Default
+    private LocalDateTime at = null;
     private Map<String, Object> meta;
 }

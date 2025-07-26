@@ -10,6 +10,7 @@ et les associer à des handlers typés exécutés automatiquement au démarrage.
 - 🧾 Définition déclarative des tâches dans application.yml
 - 🔁 Exécution automatique au démarrage de l’application
 - Planification automatique au démarrage (si cron)
+- implementation par défaut ou jobrunr possible (si dans votre classpath)
 - Refresh automatique des données de configuration des tâches (si busrefresh avec config server mis en place)
 
 ---
@@ -126,7 +127,8 @@ dependencyManagement {
 
 dependencies {   
     implementation 'org.springframework.cloud:spring-cloud-starter'
-    implementation "com.r3edge:r3edge-task-dispatcher:0.1.2"
+    implementation "com.r3edge:r3edge-task-dispatcher:0.1.4"
+    implementation 'org.jobrunr:jobrunr-spring-boot-3-starter:8.0.1' #pour une implementation jobrunr de la lib
 }
 
 ```
@@ -165,6 +167,7 @@ public class Handler1 implements TaskHandler {
 ```yaml
 r3edge:
   tasks:
+    strategy: default ## jobrunr est également disponible
     definitions:
       - id: handler1
         type: cleanup

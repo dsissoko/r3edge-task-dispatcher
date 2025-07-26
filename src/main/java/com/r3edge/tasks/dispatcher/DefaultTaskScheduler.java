@@ -3,7 +3,6 @@ package com.r3edge.tasks.dispatcher;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
-import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
  * @see Task
  * @see CronTrigger
  */
-@Component
 @Slf4j
 public class DefaultTaskScheduler implements ITaskScheduler {
 	
@@ -44,11 +42,19 @@ public class DefaultTaskScheduler implements ITaskScheduler {
      * @param task     la tâche à planifier
      * @param runnable le bloc d'exécution à déclencher selon le cron
      */
-	@Override
-	public void schedule(Task task, Runnable runnable) {
+    @Override
+    public void schedule(Task task, TaskHandler handler) {
         String cron = task.getCron();
-        if (cron == null || cron.isBlank()) return;
-        log.info("Lancement de la planification de {}", task);
-        scheduler.schedule(runnable, new CronTrigger(cron));
+        if (cron == null || cron.isBlank()) {
+            log.warn("⏭️ Tâche ignorée (pas de cron défini) : {}", task.getId());
+            return;
+        }
+        log.info("✅ Planification via DefaultTaskScheduler : id={}, cron={}", task.getId(), cron);
+        scheduler.schedule(() -> handler.handle(task), new CronTrigger(cron));
+    }
+    
+	@Override
+	public String strategyKey() {
+		return "default";
 	}
 }

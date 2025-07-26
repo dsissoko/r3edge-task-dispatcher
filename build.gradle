@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'com.r3edge'
-version = '0.1.2'
+version = '0.1.4'
 
 base {
     archivesName = 'r3edge-task-dispatcher'
@@ -49,6 +49,7 @@ repositories {
 }
 
 dependencies {
+    runtimeOnly 'com.h2database:h2'
     // Annotations et runtime
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -58,7 +59,7 @@ dependencies {
     compileOnly  'org.springframework.boot:spring-boot-starter'
     compileOnly 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
     // Gestion des tâches
-    //compileOnly 'org.jobrunr:jobrunr-spring-boot-3-starter:7.4.0'
+    implementation 'org.jobrunr:jobrunr-spring-boot-3-starter:8.0.1'
 
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.mockito:mockito-junit-jupiter'
@@ -70,8 +71,10 @@ dependencies {
     testImplementation 'org.springframework.cloud:spring-cloud-context:4.3.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
-    testImplementation 'org.springframework:spring-web'
-    //testImplementation 'org.jobrunr:jobrunr-spring-boot-3-starter:7.4.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    testImplementation 'org.jobrunr:jobrunr-spring-boot-3-starter:8.0.1'
+    //testImplementation 'org.jobrunr:jobrunr:8.0.1'
 
 }
 

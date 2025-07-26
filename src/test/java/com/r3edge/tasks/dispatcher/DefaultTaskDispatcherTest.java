@@ -11,17 +11,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.context.scope.refresh.RefreshScopeRefreshedEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import com.r3edge.tasks.TestApplication;
 
 import lombok.extern.slf4j.Slf4j;
 
-@SpringBootTest(
-	    classes = TestApplication.class,
-	    webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT
-	)
+@SpringBootTest(classes = TestApplication.class,
+webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ActiveProfiles("default")
+@TestPropertySource(  properties = {
+	    "spring.autoconfigure.exclude=" +
+	    	    "org.jobrunr.spring.autoconfigure.JobRunrAutoConfiguration," +
+	    	    "org.jobrunr.spring.autoconfigure.JobRunrBackgroundJobServerAutoConfiguration," +
+	    	    "org.jobrunr.spring.autoconfigure.JobRunrDashboardAutoConfiguration," +
+	    	    "org.jobrunr.spring.autoconfigure.storage.JobRunrSqlStorageAutoConfiguration"
+	    	  })
 @Slf4j
-class TaskConfigurationIntegrationTest {
+class DefaultTaskDispatcherTest {
 
     @Autowired private TaskConfiguration taskConfiguration;
     @Autowired TaskHandlerRegistry registry;
@@ -168,16 +176,15 @@ class TaskConfigurationIntegrationTest {
         assertThatCode(() -> dispatcher.dispatch(disabledTask)).doesNotThrowAnyException();
     }
 
-//    @Test
-//    void shouldFailWhenNoHandlerFound() {
-//        Task unknownTask = Task.builder()
-//                .id("unknown-handler")
-//                .type("unknown-type")
-//                .enabled(true)
-//                .build();
-//
-//        assertThatThrownBy(() -> dispatcher.dispatch(unknownTask))
-//                .isInstanceOf(TaskExecutionException.class)
-//                .hasMessageContaining("No handler found");
-//    }
+    @Test
+    void shouldIgnoreTaskWhenNoHandlerFound() {
+        Task unknownTask = Task.builder()
+                .id("unknown-handler")
+                .type("unknown-type")
+                .enabled(true)
+                .build();
+
+        assertThatCode(() -> dispatcher.dispatch(unknownTask))
+            .doesNotThrowAnyException();
+    }
 }

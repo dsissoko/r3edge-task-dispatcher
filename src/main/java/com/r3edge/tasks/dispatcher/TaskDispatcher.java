@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TaskDispatcher {
 
 	private final TaskHandlerRegistry registry;
-	private final DefaultTaskExecutor defaultTaskExecutor;
+	private final ITaskExecutor taskExecutor;
 	@Lazy
 	private final ITaskScheduler taskScheduler;
 	private final TaskConfiguration taskConfiguration;
@@ -45,13 +45,13 @@ public class TaskDispatcher {
         String cron = task.getCron();
         if (cron != null && taskScheduler != null) {
         	log.info("Planification de la tâche {} avec le handler {} et le scheduler {}", task.getId(), handler.getClass().getSimpleName(), taskScheduler);
-            taskScheduler.schedule(task,() -> handler.handle(task));
+            taskScheduler.schedule(task,handler);
             return;
         }		
 
 		try {
 			log.info("Exécution de la tâche {} avec le handler {}", task.getId(), handler.getClass().getSimpleName());
-			defaultTaskExecutor.execute(task, handler);
+			taskExecutor.execute(task, handler);
 		} catch (Exception e) {
 			log.error("Erreur lors de l'exécution de la tâche {}", task.getId(), e);
 			//throw new TaskExecutionException("Failed to execute task " + task.getId(), e);

@@ -1,0 +1,30 @@
+server:
+  port: 0
+
+logging:
+  level:
+    root: INFO
+    com.r3edge: DEBUG
+
+r3edge:
+  tasks:
+    strategy: dummy
+    definitions:
+      - id: task-001
+        type: print
+        enabled: true
+        meta:
+          message: "Hello from test"
+
+      - id: task-002
+        type: print
+        enabled: false
+        meta:
+          message: "This should not be printed"
+
+      - id: task-003
+        type: cleanup
+        cron: "0 * * * * *"
+        enabled: true
+        meta:
+          data: "some data"
