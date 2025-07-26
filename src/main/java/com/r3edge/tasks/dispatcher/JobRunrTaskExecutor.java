@@ -4,8 +4,10 @@ import org.jobrunr.scheduling.JobScheduler;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Implémentation de {@link ITaskExecutor} utilisant JobRunr pour l'exécution des tâches.
+ */
 @RequiredArgsConstructor
-
 public class JobRunrTaskExecutor implements ITaskExecutor {
 
     private final JobScheduler jobScheduler;

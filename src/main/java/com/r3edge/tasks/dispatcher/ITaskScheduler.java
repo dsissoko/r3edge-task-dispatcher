@@ -10,8 +10,12 @@ public interface ITaskScheduler {
 	 * Planifie l'exécution récurrente d'une tâche selon un cron.
 	 *
 	 * @param task     la tâche à planifier
-	 * @param runnable méthode à planifier
+	 * @param handler le gestionnaire de tâches
 	 */
 	void schedule(Task task, TaskHandler handler);
+	/**
+	 * Retourne la clé de stratégie pour ce planificateur.
+	 * @return La clé de stratégie.
+	 */
 	String strategyKey();
 }

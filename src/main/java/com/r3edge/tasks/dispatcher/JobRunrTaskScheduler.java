@@ -5,6 +5,9 @@ import org.jobrunr.scheduling.JobScheduler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Implémentation de {@link ITaskScheduler} utilisant JobRunr pour la planification des tâches.
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class JobRunrTaskScheduler implements ITaskScheduler {

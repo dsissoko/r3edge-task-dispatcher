@@ -75,6 +75,7 @@ public class TaskDispatcher {
 	/**
 	 * Événement déclenché après un rafraîchissement de configuration.
 	 * Permet de re-dispatcher les tâches en fonction des nouvelles définitions ou cron modifiés.
+	 * @param event L'événement de rafraîchissement du scope.
 	 */
 	@EventListener(RefreshScopeRefreshedEvent.class)
 	public void onRefreshEvent(RefreshScopeRefreshedEvent event) {

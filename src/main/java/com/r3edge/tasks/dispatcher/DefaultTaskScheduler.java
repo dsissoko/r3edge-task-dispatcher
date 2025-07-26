@@ -40,7 +40,7 @@ public class DefaultTaskScheduler implements ITaskScheduler {
      * Si aucun cron n'est défini, la méthode ne fait rien.
      *
      * @param task     la tâche à planifier
-     * @param runnable le bloc d'exécution à déclencher selon le cron
+     * @param handler le gestionnaire de tâches à déclencher selon le cron
      */
     @Override
     public void schedule(Task task, TaskHandler handler) {
