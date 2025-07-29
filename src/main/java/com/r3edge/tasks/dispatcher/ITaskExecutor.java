@@ -5,7 +5,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 
 /**
- * Interface for executing tasks.
+ * SPI pour exécuter des tâches ponctuelles ou planifiées.
+ * Chaque implémentation correspond à une stratégie d'exécution.
  */
 public interface ITaskExecutor {
     /**
@@ -26,7 +27,7 @@ public interface ITaskExecutor {
      * @param clazz La classe cible pour laquelle le logger est créé.
      * @return Un logger adapté
      */	
-	Logger getSlf4JLogger(Class<?> target);
+	Logger getSlf4JLogger(Class<?> clazz);
 	
     /**
      * Annule l'exécution d'une tâche cron ponctuelle.
@@ -35,5 +36,10 @@ public interface ITaskExecutor {
      */	
 	void cancel(Task task);
 	
+    /**
+     * Retourne les identifiants des tâches exécutées par cette stratégie.
+     *
+     * @return ensemble des identifiants de tâches exécutées
+     */
 	Set<String> getExecutedTaskIds();
 }

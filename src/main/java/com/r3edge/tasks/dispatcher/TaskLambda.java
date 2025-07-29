@@ -31,6 +31,13 @@ public interface TaskLambda extends Serializable {
 		};
 	}
 	
+    /**
+     * Convertit cette lambda en {@link Runnable} avec écoute des événements d'exécution.
+     *
+     * @param listener écouteur du cycle de vie de la tâche
+     * @param task tâche à exécuter
+     * @return un {@link Runnable} qui notifie les événements liés à l'exécution
+     */
 	default Runnable toRunnable(ITaskExecutionListener listener, Task task) {
 	    return () -> {
 	        listener.onStart(task);
@@ -44,7 +51,14 @@ public interface TaskLambda extends Serializable {
 	    };
 	}
 
-	@SuppressWarnings("unchecked")
+    /**
+     * Lance une exception checked sans avoir à la déclarer.
+     *
+     * @param e exception à lancer
+     * @param <E> type de l'exception
+     * @throws E toujours levée, jamais capturée
+     */
+    @SuppressWarnings("unchecked")
 	static <E extends Throwable> void sneakyThrow(Throwable e) throws E {
 	    throw (E) e;
 	}

@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Service chargé d'invoquer dynamiquement les handlers de tâches.
+ */
 @Service
 @RequiredArgsConstructor
 public class TaskInvokerService {
@@ -35,9 +38,9 @@ public class TaskInvokerService {
 	}
 
 	/**
-	 * Invoque le handler approprié pour la tâche donnée.
-	 * @param task La tâche à invoquer.
-	 * @return 
+	 * Exécute immédiatement une tâche via son handler.
+	 *
+	 * @param task la tâche à exécuter
 	 */
 	public void invokeNow(Task task) {
 		TaskHandler handler = registry.getHandler(task.getType()).orElse(null);

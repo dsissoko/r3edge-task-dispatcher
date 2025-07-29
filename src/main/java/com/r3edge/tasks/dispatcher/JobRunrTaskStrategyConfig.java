@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Import;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Configuration pour la stratégie de tâches JobRunr.
+ * Configuration Spring pour la stratégie de tâches basée sur JobRunr.
  */
 @Configuration
 @ConditionalOnClass(JobScheduler.class) // pour éviter toute erreur en cas d'absence des dépendances jobrunr
@@ -24,6 +24,7 @@ public class JobRunrTaskStrategyConfig {
 	 * Crée et retourne une instance de {@link ITaskScheduler} pour JobRunr.
 	 * 
 	 * @param jobScheduler Le planificateur de tâches JobRunr.
+	 * @param taskInvokerService Le service d'invocation de tâches.
 	 * @return Une instance de {@link JobRunrTaskScheduler}.
 	 */
 	@Bean

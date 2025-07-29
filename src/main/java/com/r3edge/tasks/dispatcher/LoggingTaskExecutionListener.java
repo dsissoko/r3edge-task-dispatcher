@@ -4,6 +4,10 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Implémentation de {@link ITaskExecutionListener} qui logue
+ * les événements du cycle de vie d'une tâche (démarrage, succès, échec).
+ */
 @Component
 @Slf4j
 public class LoggingTaskExecutionListener implements ITaskExecutionListener {

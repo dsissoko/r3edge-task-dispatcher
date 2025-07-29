@@ -15,22 +15,7 @@ import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Implémentation par défaut de {@link ITaskScheduler} utilisant un
- * {@link ThreadPoolTaskScheduler} pour planifier l'exécution des tâches selon
- * une expression cron.
- *
- * <p>
- * Chaque tâche est planifiée avec un {@link CronTrigger} si le champ
- * {@code cron} est défini dans l'objet {@link Task}.
- * </p>
- *
- * <p>
- * Un pool de 2 threads est utilisé pour l'exécution concurrente des tâches
- * planifiées.
- * </p>
- *
- * @see Task
- * @see CronTrigger
+ * Planifie des tâches avec un cron via {@link ThreadPoolTaskScheduler}.
  */
 @Slf4j
 public class DefaultTaskScheduler implements ITaskScheduler {
@@ -41,8 +26,8 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 	private final ITaskExecutionListener listener;
 
 	/**
-	 * Initialise le planificateur avec un pool de 2 threads et un préfixe de
-	 * nommage de threads {@code r3edge-task-}.
+	 * @param invokerService service chargé d'invoquer la tâche
+	 * @param listener listener de cycle de vie des tâches
 	 */
 	public DefaultTaskScheduler(TaskInvokerService invokerService, ITaskExecutionListener listener) {
 		ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
@@ -54,6 +39,7 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 		this.listener = listener;
 	}
 
+	/** Annule toutes les tâches et arrête le scheduler. */
 	@PreDestroy
 	public void shutdown() {
 		log.info("🧹 Nettoyage des tâches planifiées avant arrêt...");
@@ -65,12 +51,11 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 	}
 
 	/**
-	 * Planifie une tâche à exécuter selon l'expression cron définie dans le champ
-	 * {@code cron} de la tâche. Si aucun cron n'est défini, la méthode ne fait
-	 * rien.
+	 * Planifie une tâche à exécuter selon son expression cron.
+	 * Si une tâche avec le même identifiant est déjà planifiée, elle sera remplacée.
 	 *
-	 * @param task    la tâche à planifier
-	 * @param handler le gestionnaire de tâches à déclencher selon le cron
+	 * @param task    La tâche à planifier. Elle doit avoir un champ {@code cron} non nul.
+	 * @param handler Le gestionnaire à invoquer au moment de l’exécution.
 	 */
 	@Override
 	public void schedule(Task task, TaskHandler handler) {
@@ -91,28 +76,45 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 		}
 	}
 
+	/**
+	 * Retourne la clé de stratégie associée à ce scheduler.
+	 * Cette valeur permet d'identifier dynamiquement cette implémentation.
+	 *
+	 * @return la clé "default".
+	 */
 	@Override
 	public String strategyKey() {
 		return "default";
 	}
 
-	@Override
 	/**
 	 * Retourne un logger SLF4J standard adapté à la classe cible.
 	 *
 	 * @param clazz La classe pour laquelle le logger est créé.
 	 * @return Un logger SLF4J classique.
 	 */
+	@Override
 	public Logger getSlf4JLogger(Class<?> clazz) {
 		return LoggerFactory.getLogger(clazz);
 	}
 
+	/**
+	 * Annule l'exécution planifiée de la tâche spécifiée, si elle est actuellement planifiée.
+	 *
+	 * @param task la tâche à désinscrire.
+	 */	
 	@Override
 	public void unschedule(Task task) {
 		ScheduledFuture<?> future = scheduled.remove(task.getId());
 		cancelFuture(future, task.getId());
 	}
 
+	/**
+	 * Annule une tâche planifiée et logue l'action effectuée.
+	 *
+	 * @param future la tâche planifiée à annuler.
+	 * @param taskId identifiant de la tâche, pour le logging.
+	 */
 	private void cancelFuture(ScheduledFuture<?> future, String taskId) {
 		if (future != null) {
 			future.cancel(true);
@@ -122,6 +124,12 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 		}
 	}
 
+	/**
+	 * Annule l'exécution planifiée d'une tâche par son identifiant.
+	 * Si aucune tâche n’est trouvée, l’appel est ignoré.
+	 *
+	 * @param taskId identifiant de la tâche à désinscrire.
+	 */
 	@Override
 	public void unscheduleById(String taskId) {
 		ScheduledFuture<?> future = scheduled.remove(taskId);
@@ -130,6 +138,11 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 		}
 	}
 
+	/**
+	 * Retourne l’ensemble des identifiants des tâches actuellement planifiées.
+	 *
+	 * @return un ensemble d’identifiants de tâches.
+	 */
 	@Override
 	public Set<String> getScheduledTaskIds() {
 		return scheduled.keySet();

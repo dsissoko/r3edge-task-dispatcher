@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Composant central chargé de déléguer l'exécution d'une tâche au handler
- * approprié.
+ * Composant central chargé de dispatcher les tâches configurées vers
+ * les exécutants ou planificateurs adéquats, en fonction de leur stratégie.
  */
 @Slf4j
 @Component
@@ -84,6 +84,9 @@ public class TaskDispatcher {
 		refreshTasks();
 	}
 
+    /**
+     * Recharge l'ensemble des tâches à partir de la configuration actuelle.
+     */
 	public void refreshTasks() {
 		log.info("🔁 Refresh complet des tâches...");
 		cleanupObsoleteTasks();
@@ -91,6 +94,9 @@ public class TaskDispatcher {
 		log.info("✅ Refresh terminé.");
 	}
 
+    /**
+     * Supprime toutes les tâches actives planifiées ou en cours d'exécution.
+     */
 	public void cleanupObsoleteTasks() {
 		log.info("🧹 CleanUp des tâches actives...");
 		strategyRouter.allSchedulers().forEach(scheduler -> {

@@ -48,6 +48,11 @@ public interface ITaskScheduler {
 	void unscheduleById(String taskId);
 	
 	
+    /**
+     * Retourne l'ensemble des identifiants des tâches actuellement planifiées.
+     *
+     * @return ensemble d'identifiants de tâches
+     */
 	default Set<String> getScheduledTaskIds() {
 	    return Collections.emptySet();
 	}
