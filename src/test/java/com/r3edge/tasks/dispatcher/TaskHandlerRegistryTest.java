@@ -19,7 +19,7 @@ class TaskHandlerRegistryTest {
 
     @Test
     void shouldReturnNullIfNotRegistered() {
-        assertThat(registry.getHandler("unknown")).isNull();
+    	assertThat(registry.getHandler("unknown")).isEmpty();
     }
 
     @Test
@@ -37,6 +37,6 @@ class TaskHandlerRegistryTest {
 
         registry.addHandler(handler);
 
-        assertThat(registry.getHandler("print")).isSameAs(handler);
+        assertThat(registry.getHandler("print")).hasValue(handler);
     }
 }

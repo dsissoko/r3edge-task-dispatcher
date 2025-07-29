@@ -1,5 +1,6 @@
 package com.r3edge.tasks.dispatcher;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -48,5 +49,21 @@ public class TaskStrategyRouter {
      */
     public ITaskScheduler resolveScheduler(Task task) {
         return schedulers.getOrDefault(task.getStrategy(), schedulers.get("default"));
+    }
+    
+    /**
+     * Retourne tous les planificateurs connus, pour inspection ou nettoyage global.
+     * @return Liste de tous les planificateurs.
+     */
+    public Collection<ITaskScheduler> allSchedulers() {
+        return schedulers.values();
+    }
+
+    /**
+     * Retourne tous les exécuteurs connus, pour inspection ou nettoyage global.
+     * @return Liste de tous les exécuteurs.
+     */
+    public Collection<ITaskExecutor> allExecutors() {
+        return executors.values();
     }
 }

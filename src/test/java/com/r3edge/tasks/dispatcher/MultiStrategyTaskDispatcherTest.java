@@ -18,9 +18,9 @@ import com.r3edge.tasks.TestApplication;
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("jobrunr")
+@ActiveProfiles("multistrategy")
 @Slf4j
-class JobRunrTaskDispatcherTest {
+class MultiStrategyTaskDispatcherTest {
 
 	@Autowired
 	private TaskConfiguration taskConfiguration;
@@ -32,11 +32,6 @@ class JobRunrTaskDispatcherTest {
 	private ApplicationEventPublisher eventPublisher;
 	@Autowired
 	org.springframework.core.env.Environment env;
-
-	@Test
-	void shouldHaveCorrectStrategy() {
-		assertThat(env.getProperty("r3edge.tasks.strategy")).isEqualTo("jobrunr");
-	}
 
 	@Test
 	void shouldLoadTasksFromYaml() {

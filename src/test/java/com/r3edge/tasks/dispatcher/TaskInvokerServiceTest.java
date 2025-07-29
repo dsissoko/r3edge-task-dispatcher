@@ -41,7 +41,7 @@ class TaskInvokerServiceTest {
                 .meta(Map.of())
                 .build();
 
-        assertThatCode(() -> invoker.invoke(task)).doesNotThrowAnyException();
+        assertThatCode(() -> invoker.invokeNow(task)).doesNotThrowAnyException();
     }
 
     @Test
@@ -53,7 +53,7 @@ class TaskInvokerServiceTest {
                 .meta(Map.of())
                 .build();
 
-        assertThatThrownBy(() -> invoker.invoke(task))
+        assertThatThrownBy(() -> invoker.toLambda(task).run())
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("Aucun handler pour le type");
     }
@@ -64,7 +64,6 @@ class TaskInvokerServiceTest {
             @Override
             public String getType() {
                 return "fail";
-
             }
 
             @Override
@@ -82,8 +81,9 @@ class TaskInvokerServiceTest {
                 .meta(Map.of())
                 .build();
 
-        assertThatThrownBy(() -> invoker.invoke(task))
+        assertThatThrownBy(() -> invoker.toLambda(task).run())
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("boum");
     }
 }
+

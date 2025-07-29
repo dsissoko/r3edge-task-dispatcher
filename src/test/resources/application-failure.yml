@@ -1,0 +1,33 @@
+server:
+  port: 0
+
+logging:
+  level:
+    root: INFO
+    com.r3edge: DEBUG
+
+r3edge:
+  tasks:
+    definitions:
+      - id: task-001
+        strategy: jobrunr
+        type: exceptionfailure
+        enabled: true
+        meta:
+          message: "Hello, im going to fail with an exception"
+      - id: task-002
+        strategy: jobrunr
+        type: silentfailure
+        enabled: true
+        meta:
+          message: "Hello, im going to fail silently"
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:jobrunrtest;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none

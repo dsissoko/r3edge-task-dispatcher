@@ -44,7 +44,7 @@ class DefaultTaskDispatcherTest {
 
     @Test
     void shouldRegisterPrintHandler() {
-        TaskHandler handler = registry.getHandler("print");
+        TaskHandler handler = registry.getHandler("print").orElse(null);
         assertThat(handler).isInstanceOf(PrintTaskHandler.class);
     }
 

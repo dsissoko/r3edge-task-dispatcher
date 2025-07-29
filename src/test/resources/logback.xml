@@ -1,0 +1,17 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <!-- Réduction du bruit Spring -->
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework.boot.test" level="INFO"/>
+    <logger name="org.springframework.test.context" level="INFO"/>
+
+    <!-- Ton code en DEBUG -->
+    <logger name="com.r3edge" level="DEBUG"/>
+
+    <!-- Root global en WARN -->
+    <root level="WARN">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

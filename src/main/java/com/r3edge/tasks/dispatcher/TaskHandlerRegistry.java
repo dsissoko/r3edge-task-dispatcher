@@ -3,6 +3,7 @@ package com.r3edge.tasks.dispatcher;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -35,8 +36,8 @@ public class TaskHandlerRegistry {
 	 * @param type le type de tâche
 	 * @return le handler correspondant, ou {@code null} si aucun n'est trouvé
 	 */
-	public TaskHandler getHandler(String type) {
-		return handlerMap.get(type);
+	public Optional<TaskHandler> getHandler(String type) {
+	    return Optional.ofNullable(handlerMap.get(type));
 	}
 
 	/**

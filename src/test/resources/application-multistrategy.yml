@@ -1,0 +1,67 @@
+server:
+  port: 0
+
+logging:
+  level:
+    root: INFO
+    com.r3edge: DEBUG
+
+r3edge:
+  tasks:
+    definitions:
+      - id: task-001
+        strategy: jobrunr
+        type: print
+        enabled: true
+        meta:
+          message: "Hello from jobrunr task"
+
+      - id: task-001bis
+        strategy: default
+        type: print
+        enabled: true
+        meta:
+          message: "Hello from default task"
+          
+      - id: task-002
+        type: print
+        enabled: false
+        meta:
+          message: "This should not be printed"
+
+      - id: task-003
+        strategy: jobrunr
+        type: cleanup
+        cron: "0 * * * * *"
+        enabled: true
+        meta:
+          data: "Hello from jobrunr cron task"
+
+      - id: task-003bis
+        strategy: default
+        type: cleanup
+        cron: "0 * * * * *"
+        enabled: true
+        meta:
+          data: "Hello from default cron task"
+                    
+      - id: invalid-task-no-handler
+        type: dummy-invalid
+        enabled: true
+        meta: {}
+
+      - id: valid-task
+        type: mock-task
+        enabled: true
+        meta:
+          key: value
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:jobrunrtest;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none

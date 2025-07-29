@@ -26,5 +26,7 @@ public class Task {
     private String cron = null;
     @Builder.Default
     private LocalDateTime at = null;
+    @Builder.Default
+    private boolean redispatchedOnRefresh= false; 
     private Map<String, Object> meta;
 }

@@ -167,9 +167,9 @@ public class Handler1 implements TaskHandler {
 ```yaml
 r3edge:
   tasks:
-    strategy: default ## jobrunr est également disponible
     definitions:
       - id: handler1
+        strategy: default ## jobrunr est également disponible, si aucune strategy spécifiée alors fallback vers default
         type: cleanup
         enabled: true
         cron: "0 * * * * *"
@@ -189,6 +189,37 @@ r3edge:
 ### 🔐 5. Lancez votre service
 
  - Au démarrage vos tâches sont prises en charge directement (exécution ou planification)
+ - Au refresh (si cloudbus et config server correctement configurés), les tâches sont rechargées.
+ 
+### ⚙️ Comportement au redémarrage ou après refresh de configuration
+
+#### 🟢 Tâche avec `cron` :
+
+| Implémentation | Comportement au redémarrage           | Comportement au refresh            |
+|----------------|----------------------------------------|------------------------------------|
+| `Default`      | ✔ Replanifiée                         | ✔ Replanifiée                     |
+| `JobRunr`      | ✔ Non dupliquée (persistée)           | ✔ Non dupliquée (persistée)       |
+
+- Si `enabled: false`, alors les tâches ne sont pas prises en compte.
+- Pour une tâche de type cron, le champ `redispatchedOnRefresh` est systématiquement **ignoré**.
+
+#### 🔵 Tâche ponctuelle (sans `cron`) :
+
+| Implémentation | Comportement au redémarrage                            | Comportement au refresh                       |
+|----------------|--------------------------------------------------------|-----------------------------------------------|
+| `Default`      | ✔ Relancée                                             | ✔ Relancée si `redispatchedOnRefresh: true`  |
+| `JobRunr`      | ✘ Non relancée si déjà exécutée (persistée)           | ✔ Relancée si `redispatchedOnRefresh: true`  |
+
+- Si `enabled: false`, alors les tâches ne sont pas prises en compte.
+
+#### 🗑️ Tâche supprimée du YAML :
+
+- Toute tâche précédemment dispatchée mais absente de la nouvelle config est **automatiquement annulée**.
+
+| Implémentation | Comportement au redémarrage                | Comportement au refresh                  |
+|----------------|--------------------------------------------|------------------------------------------|
+| `Default`      | ✔ Annulée automatiquement                 | ✔ Annulée automatiquement               |
+| `JobRunr`      | ✔ Déplanifiée si cron                     | ✔ Déplanifiée si cron                   |
 
 ---
 

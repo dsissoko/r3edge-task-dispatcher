@@ -3,7 +3,6 @@ package com.r3edge.tasks.dispatcher;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.context.scope.refresh.RefreshScopeRefreshedEvent;
@@ -25,8 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 @ConfigurationProperties(prefix = "r3edge.tasks")
 public class TaskConfiguration {
 	
-	@Value("${task.strategy:default}")
-	private String strategy;
     private List<Task> definitions = new ArrayList<>();
 
     /**
@@ -38,15 +35,6 @@ public class TaskConfiguration {
         // Log du chargement des tâches
         log.debug("Tasks configuration chargée avec {} tasks", definitions.size());
 
-        // Validation de la stratégie
-        List<String> supported = List.of("default", "jobrunr");
-
-        if (!supported.contains(strategy)) {
-            log.warn("⚠️ Stratégie '{}' inconnue — fallback implicite vers 'default'. Stratégies supportées : {}", strategy, supported);
-            // throw new IllegalStateException("Stratégie inconnue : " + strategy); // si fail-fast
-        } else {
-            log.info("✅ Stratégie de tâche activée : '{}'", strategy);
-        }
     }
     
     /**
@@ -57,5 +45,12 @@ public class TaskConfiguration {
     @EventListener(RefreshScopeRefreshedEvent.class)
     public void onRefresh() {
         log.debug("Configuration rafraîchie : {} tâches", definitions.size());
+    }
+    
+    @Override
+    public String toString() {
+        return "TaskConfiguration{" +
+                "definitions=" + definitions +
+                '}';
     }
 }

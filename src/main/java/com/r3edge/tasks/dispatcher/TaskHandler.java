@@ -20,4 +20,15 @@ public interface TaskHandler {
      */
     void handle(Task task);
 
+    
+    /**
+     * Fournit une lambda exécutable représentant la logique métier différée de la tâche.
+     * Optionnel, mais requis pour une intégration propre avec des systèmes comme JobRunr.
+     *
+     * @param task La tâche à encapsuler.
+     * @return une TaskLambda ou null si non supporté.
+     */
+    default TaskLambda toLambda(Task task) {
+        return () -> handle(task);
+    }
 }

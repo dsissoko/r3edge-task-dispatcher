@@ -20,6 +20,11 @@ public class CleanUpHandler implements TaskHandler{
         String message = extractMeta(task);
         log.info("📣 Exécution de CleanUpHandler avec les meta suivantes: {}", message);
     }
+    
+    @Override
+    public TaskLambda toLambda(Task task) {
+        return () -> handle(task); // ← capturable et serializable
+    }
 	
     private String extractMeta(Task task) {
         if (task == null || task.getMeta() == null || task.getMeta().isEmpty()) return "n/a";
