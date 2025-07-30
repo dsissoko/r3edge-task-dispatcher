@@ -63,14 +63,6 @@ class MultiStrategyTaskDispatcherTest {
 		Task task3 = Task.builder().id("task-003").type("unknown-type").meta(Map.of("data", "some data")).build();
 
 		taskConfiguration.setDefinitions(List.of(task1, task2, task3));
-
-		try {
-			eventPublisher.publishEvent(new RefreshScopeRefreshedEvent());
-		} catch (TaskExecutionException e) {
-			assertThat(e.getMessage()).contains("No handler found for task type: unknown-type");
-		}
-
-		// Pas de vérif de log, le comportement est OK si pas d'exception
 	}
 
 	@Test

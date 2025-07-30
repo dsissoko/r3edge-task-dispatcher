@@ -1,12 +1,15 @@
-package com.r3edge.tasks.dispatcher;
+package com.r3edge.tasks.dispatcher.impl.defaultspring;
 
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.r3edge.tasks.dispatcher.ITaskExecutor;
+import com.r3edge.tasks.dispatcher.Task;
+import com.r3edge.tasks.dispatcher.TaskHandler;
+import com.r3edge.tasks.dispatcher.TaskInvokerService;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,25 +42,29 @@ public class DefaultTaskExecutor implements ITaskExecutor {
 		return "default";
 	}
 
-	@Override
 	/**
-	 * Retourne un logger SLF4J standard adapté à la classe cible.
+	 * Annule l'exécution une tâche. Si aucune tâche n’est trouvée, l’appel est
+	 * ignoré.
 	 *
-	 * @param clazz La classe pour laquelle le logger est créé.
-	 * @return Un logger SLF4J classique.
+	 * @param task tâche à annuler.
 	 */
-	public Logger getSlf4JLogger(Class<?> clazz) {
-		return LoggerFactory.getLogger(clazz);
-	}
-
 	@Override
 	public void cancel(Task task) {
 		log.info("Cancel de la tâche (TODO) {}", task);
 	}
 
+	/**
+	 * Retourne l’ensemble des identifiants des tâches actuellement planifiées.
+	 *
+	 * @return un ensemble d’identifiants de tâches.
+	 */
 	@Override
 	public Set<String> getExecutedTaskIds() {
 		return Collections.unmodifiableSet(executedTaskIds);
 	}
 
+	@PostConstruct
+	private void logActivation() {
+		log.debug("🔧 Bean DefaultTaskStrategyConfig initialisé");
+	}
 }

@@ -1,5 +1,7 @@
 package com.r3edge.tasks.dispatcher;
 
+import org.slf4j.Logger;
+
 /**
  * Interface que chaque handler de tâche doit implémenter.
  * Un handler traite une tâche de type spécifique.
@@ -20,15 +22,13 @@ public interface TaskHandler {
      */
     void handle(Task task);
 
-    
     /**
-     * Fournit une lambda exécutable représentant la logique métier différée de la tâche.
-     * Optionnel, mais requis pour une intégration propre avec des systèmes comme JobRunr.
+     * Traite la tâche spécifiée.
      *
-     * @param task La tâche à encapsuler.
-     * @return une TaskLambda ou null si non supporté.
+     * @param task la tâche à traiter
+     * @param logger pour logger ailleurs que le stdout
      */
-    default TaskLambda toLambda(Task task) {
-        return () -> handle(task);
-    }
+    void handle(Task task, Logger logger);
+    
+
 }

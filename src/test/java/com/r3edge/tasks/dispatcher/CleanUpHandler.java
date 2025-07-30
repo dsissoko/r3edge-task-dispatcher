@@ -2,6 +2,7 @@ package com.r3edge.tasks.dispatcher;
 
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +21,6 @@ public class CleanUpHandler implements TaskHandler{
         String message = extractMeta(task);
         log.info("📣 Exécution de CleanUpHandler avec les meta suivantes: {}", message);
     }
-    
-    @Override
-    public TaskLambda toLambda(Task task) {
-        return () -> handle(task); // ← capturable et serializable
-    }
 	
     private String extractMeta(Task task) {
         if (task == null || task.getMeta() == null || task.getMeta().isEmpty()) return "n/a";
@@ -32,4 +28,10 @@ public class CleanUpHandler implements TaskHandler{
             .map(e -> "\"" + e.getKey() + "\": \"" + e.getValue() + "\"")
             .collect(Collectors.joining(", ", "{", "}"));
     }
+
+	@Override
+	public void handle(Task task, Logger logger) {
+		// TODO Auto-generated method stub
+		
+	}
 }

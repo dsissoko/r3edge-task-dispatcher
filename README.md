@@ -3,6 +3,11 @@
 Une librairie Spring Boot de confort permettant de définir des tâches dans un fichier YAML  
 et les associer à des handlers typés exécutés automatiquement au démarrage.
 
+This project is documented in French 🇫🇷 by default.  
+An auto-translated English version is available here:
+
+[👉 English (auto-translated by Google)](https://translate.google.com/translate?sl=auto&tl=en&u=https://github.com/dsissoko/r3edge-task-dispatcher)
+
 ---
 
 ## ✅ Fonctionnalités

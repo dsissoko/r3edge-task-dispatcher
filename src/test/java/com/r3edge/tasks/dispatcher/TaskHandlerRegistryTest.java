@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
 
 class TaskHandlerRegistryTest {
 
@@ -33,6 +34,12 @@ class TaskHandlerRegistryTest {
             @Override
             public void handle(Task task) {
             }
+
+			@Override
+			public void handle(Task task, Logger logger) {
+				// TODO Auto-generated method stub
+				
+			}
         };
 
         registry.addHandler(handler);

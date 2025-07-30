@@ -1,5 +1,6 @@
 package com.r3edge.tasks.dispatcher;
 
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,4 +21,10 @@ public class ExceptionFailureTaskHandler implements TaskHandler {
         log.error("❌ {}", msg);
         throw new RuntimeException(msg);
     }
+
+	@Override
+	public void handle(Task task, Logger logger) {
+		// TODO Auto-generated method stub
+		
+	}
 }

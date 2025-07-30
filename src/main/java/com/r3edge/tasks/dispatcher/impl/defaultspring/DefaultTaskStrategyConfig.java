@@ -1,7 +1,12 @@
-package com.r3edge.tasks.dispatcher;
+package com.r3edge.tasks.dispatcher.impl.defaultspring;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.r3edge.tasks.dispatcher.ITaskExecutionListener;
+import com.r3edge.tasks.dispatcher.ITaskExecutor;
+import com.r3edge.tasks.dispatcher.ITaskScheduler;
+import com.r3edge.tasks.dispatcher.TaskInvokerService;
 
 import lombok.extern.slf4j.Slf4j;
 

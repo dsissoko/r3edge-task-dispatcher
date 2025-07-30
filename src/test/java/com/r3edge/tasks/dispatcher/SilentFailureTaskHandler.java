@@ -1,5 +1,6 @@
 package com.r3edge.tasks.dispatcher;
 
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,4 +20,10 @@ public class SilentFailureTaskHandler implements TaskHandler {
         String msg = raw != null ? raw.toString() : "(no message)";
         log.error("❌ {}", msg);
     }
+
+	@Override
+	public void handle(Task task, Logger logger) {
+		// TODO Auto-generated method stub
+		
+	}
 }

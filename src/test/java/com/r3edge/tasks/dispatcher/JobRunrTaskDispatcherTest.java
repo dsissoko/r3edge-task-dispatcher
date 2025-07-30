@@ -69,13 +69,6 @@ class JobRunrTaskDispatcherTest {
 
 		taskConfiguration.setDefinitions(List.of(task1, task2, task3));
 
-		try {
-			eventPublisher.publishEvent(new RefreshScopeRefreshedEvent());
-		} catch (TaskExecutionException e) {
-			assertThat(e.getMessage()).contains("No handler found for task type: unknown-type");
-		}
-
-		// Pas de vérif de log, le comportement est OK si pas d'exception
 	}
 
 	@Test

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
 
 class TaskInvokerServiceTest {
 
@@ -26,6 +27,12 @@ class TaskInvokerServiceTest {
             public void handle(Task task) {
                 // comportement simulé OK
             }
+            
+			@Override
+			public void handle(Task task, Logger logger) {
+				// TODO Auto-generated method stub
+				
+			}
         };
 
         registry = new TaskHandlerRegistry(List.of(dummyHandler));
@@ -53,7 +60,7 @@ class TaskInvokerServiceTest {
                 .meta(Map.of())
                 .build();
 
-        assertThatThrownBy(() -> invoker.toLambda(task).run())
+        assertThatThrownBy(() -> invoker.invokeNow(task))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("Aucun handler pour le type");
     }
@@ -70,6 +77,12 @@ class TaskInvokerServiceTest {
             public void handle(Task task) {
                 throw new RuntimeException("boum");
             }
+            
+			@Override
+			public void handle(Task task, Logger logger) {
+				// TODO Auto-generated method stub
+				
+			}
         };
 
         registry.addHandler(failingHandler);
@@ -81,7 +94,7 @@ class TaskInvokerServiceTest {
                 .meta(Map.of())
                 .build();
 
-        assertThatThrownBy(() -> invoker.toLambda(task).run())
+        assertThatThrownBy(() -> invoker.invokeNow(task))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("boum");
     }

@@ -2,6 +2,7 @@ package com.r3edge.tasks.dispatcher;
 
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -30,4 +31,10 @@ public class PrintTaskHandler implements TaskHandler {
             .map(e -> "\"" + e.getKey() + "\": \"" + e.getValue() + "\"")
             .collect(Collectors.joining(", ", "{", "}"));
     }
+
+	@Override
+	public void handle(Task task, Logger logger) {
+		// TODO Auto-generated method stub
+		
+	}
 }
