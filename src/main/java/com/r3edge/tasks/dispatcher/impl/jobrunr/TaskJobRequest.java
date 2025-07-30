@@ -6,7 +6,7 @@ import org.jobrunr.jobs.lambdas.JobRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.r3edge.tasks.dispatcher.Task;
+import com.r3edge.tasks.dispatcher.core.Task;
 
 import lombok.RequiredArgsConstructor;
 

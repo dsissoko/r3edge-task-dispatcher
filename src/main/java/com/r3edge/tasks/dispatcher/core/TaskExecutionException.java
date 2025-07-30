@@ -1,4 +1,4 @@
-package com.r3edge.tasks.dispatcher;
+package com.r3edge.tasks.dispatcher.core;
 
 /**
  * Exception levée lorsqu'une erreur survient durant l'exécution d'une tâche.

@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import com.r3edge.tasks.dispatcher.ITaskExecutor;
-import com.r3edge.tasks.dispatcher.ITaskScheduler;
+import com.r3edge.tasks.dispatcher.core.ITaskExecutor;
+import com.r3edge.tasks.dispatcher.core.ITaskScheduler;
 
 import lombok.extern.slf4j.Slf4j;
 

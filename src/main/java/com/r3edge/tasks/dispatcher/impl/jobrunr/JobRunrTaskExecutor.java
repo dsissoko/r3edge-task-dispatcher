@@ -7,10 +7,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.jobrunr.scheduling.BackgroundJobRequest;
 
-import com.r3edge.tasks.dispatcher.ITaskExecutor;
-import com.r3edge.tasks.dispatcher.Task;
-import com.r3edge.tasks.dispatcher.TaskHandler;
-import com.r3edge.tasks.dispatcher.TasksUtils;
+import com.r3edge.tasks.dispatcher.core.ITaskExecutor;
+import com.r3edge.tasks.dispatcher.core.Task;
+import com.r3edge.tasks.dispatcher.core.TaskHandler;
+import com.r3edge.tasks.dispatcher.core.TasksUtils;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +70,7 @@ public class JobRunrTaskExecutor implements ITaskExecutor {
 
 	@PostConstruct
 	private void logActivation() {
-		log.debug("🔧 Bean JobRunrTaskExecutor initialisé");
+		log.debug("✅ Bean JobRunrTaskExecutor initialisé");
 	}
 
 }

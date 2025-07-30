@@ -145,8 +145,8 @@ package com.example.demo;
 
 import org.springframework.stereotype.Component;
 
-import com.r3edge.tasks.dispatcher.Task;
-import com.r3edge.tasks.dispatcher.TaskHandler;
+import com.r3edge.tasks.dispatcher.core.Task;
+import com.r3edge.tasks.dispatcher.core.TaskHandler;
 
 import lombok.extern.slf4j.Slf4j;
 

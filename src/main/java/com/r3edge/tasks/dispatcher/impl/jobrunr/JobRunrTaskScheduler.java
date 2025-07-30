@@ -7,9 +7,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.jobrunr.scheduling.BackgroundJobRequest;
 import org.slf4j.Logger;
 
-import com.r3edge.tasks.dispatcher.ITaskScheduler;
-import com.r3edge.tasks.dispatcher.Task;
-import com.r3edge.tasks.dispatcher.TaskHandler;
+import com.r3edge.tasks.dispatcher.core.ITaskScheduler;
+import com.r3edge.tasks.dispatcher.core.Task;
+import com.r3edge.tasks.dispatcher.core.TaskHandler;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +60,7 @@ public class JobRunrTaskScheduler implements ITaskScheduler {
 
 	@PostConstruct
 	private void logActivation() {
-		log.debug("🔧 Bean JobRunrTaskScheduler initialisé");
+		log.debug("✅ Bean JobRunrTaskScheduler initialisé");
 	}
 
 }

@@ -14,6 +14,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.r3edge.tasks.TestApplication;
+import com.r3edge.tasks.dispatcher.core.Task;
+import com.r3edge.tasks.dispatcher.core.TaskConfiguration;
+import com.r3edge.tasks.dispatcher.core.TaskDispatcher;
+import com.r3edge.tasks.dispatcher.core.TaskHandler;
+import com.r3edge.tasks.dispatcher.core.TaskHandlerRegistry;
 
 import lombok.extern.slf4j.Slf4j;
 

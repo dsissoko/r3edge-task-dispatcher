@@ -4,7 +4,7 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 
-import com.r3edge.tasks.dispatcher.TaskConfiguration;
+import com.r3edge.tasks.dispatcher.core.TaskConfiguration;
 
 /**
  * Configuration automatique du dispatcher de tâches.
@@ -12,5 +12,5 @@ import com.r3edge.tasks.dispatcher.TaskConfiguration;
  */
 @AutoConfiguration
 @EnableConfigurationProperties(TaskConfiguration.class)
-@ComponentScan(basePackages = "com.r3edge.tasks.dispatcher")
+@ComponentScan(basePackages = "com.r3edge.tasks.dispatcher.core")
 public class TaskDispatcherAutoConfiguration {}

@@ -4,7 +4,7 @@ import org.jobrunr.jobs.lambdas.JobRequestHandler;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
-import com.r3edge.tasks.dispatcher.TaskInvokerService;
+import com.r3edge.tasks.dispatcher.core.TaskInvokerService;
 
 import lombok.RequiredArgsConstructor;
 

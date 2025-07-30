@@ -1,4 +1,4 @@
-package com.r3edge.tasks.dispatcher;
+package com.r3edge.tasks.dispatcher.core;
 
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.cloud.context.scope.refresh.RefreshScopeRefreshedEvent;
@@ -68,7 +68,7 @@ public class TaskDispatcher {
 	 */
 	@EventListener(WebServerInitializedEvent.class)
 	public void onApplicationEvent(WebServerInitializedEvent event) {
-		log.info("📥 Démarrage du service de dispatch.");
+		log.info("🔄 Démarrage du service de dispatch.");
 		taskConfiguration.getDefinitions().forEach(this::dispatch);
 	}
 

@@ -11,6 +11,14 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.r3edge.tasks.dispatcher.core.ITaskExecutor;
+import com.r3edge.tasks.dispatcher.core.ITaskScheduler;
+import com.r3edge.tasks.dispatcher.core.Task;
+import com.r3edge.tasks.dispatcher.core.TaskConfiguration;
+import com.r3edge.tasks.dispatcher.core.TaskDispatcher;
+import com.r3edge.tasks.dispatcher.core.TaskHandlerRegistry;
+import com.r3edge.tasks.dispatcher.core.TaskStrategyRouter;
+
 public class TaskRefreshLifecycleTest {
 
     private TaskConfiguration taskConfiguration;

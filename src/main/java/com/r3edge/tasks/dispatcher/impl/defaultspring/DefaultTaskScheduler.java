@@ -11,11 +11,11 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 
-import com.r3edge.tasks.dispatcher.ITaskExecutionListener;
-import com.r3edge.tasks.dispatcher.ITaskScheduler;
-import com.r3edge.tasks.dispatcher.Task;
-import com.r3edge.tasks.dispatcher.TaskHandler;
-import com.r3edge.tasks.dispatcher.TaskInvokerService;
+import com.r3edge.tasks.dispatcher.core.ITaskExecutionListener;
+import com.r3edge.tasks.dispatcher.core.ITaskScheduler;
+import com.r3edge.tasks.dispatcher.core.Task;
+import com.r3edge.tasks.dispatcher.core.TaskHandler;
+import com.r3edge.tasks.dispatcher.core.TaskInvokerService;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -81,7 +81,7 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 
 	    if (future != null) {
 	        ScheduledFuture<?> previousFuture = scheduled.put(task.getId(), future);
-	        log.info("🕒 La tâche id={} a été planifiée avec le motif cron={}", task.getId(), cron);
+	        log.info("🔄 La tâche id={} a été planifiée avec le motif cron={}", task.getId(), cron);
 
 	        if (previousFuture != null) {
 	            log.warn("🔁 La tâche {} a été remplacée par une nouvelle version", task.getId());
@@ -156,6 +156,6 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 
 	@PostConstruct
 	private void logActivation() {
-		log.debug("🔧 Bean DefaultTaskScheduler initialisé");
+		log.debug("✅ Bean DefaultTaskScheduler initialisé");
 	}
 }

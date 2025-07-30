@@ -10,6 +10,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
+import com.r3edge.tasks.dispatcher.core.Task;
+import com.r3edge.tasks.dispatcher.core.TaskHandler;
+import com.r3edge.tasks.dispatcher.core.TaskHandlerRegistry;
+import com.r3edge.tasks.dispatcher.core.TaskInvokerService;
+
 class TaskInvokerServiceTest {
 
     private TaskHandlerRegistry registry;

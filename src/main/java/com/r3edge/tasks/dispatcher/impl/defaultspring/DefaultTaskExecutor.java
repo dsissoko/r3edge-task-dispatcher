@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.r3edge.tasks.dispatcher.ITaskExecutor;
-import com.r3edge.tasks.dispatcher.Task;
-import com.r3edge.tasks.dispatcher.TaskHandler;
-import com.r3edge.tasks.dispatcher.TaskInvokerService;
+import com.r3edge.tasks.dispatcher.core.ITaskExecutor;
+import com.r3edge.tasks.dispatcher.core.Task;
+import com.r3edge.tasks.dispatcher.core.TaskHandler;
+import com.r3edge.tasks.dispatcher.core.TaskInvokerService;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +65,6 @@ public class DefaultTaskExecutor implements ITaskExecutor {
 
 	@PostConstruct
 	private void logActivation() {
-		log.debug("🔧 Bean DefaultTaskStrategyConfig initialisé");
+		log.debug("✅ Bean DefaultTaskStrategyConfig initialisé");
 	}
 }

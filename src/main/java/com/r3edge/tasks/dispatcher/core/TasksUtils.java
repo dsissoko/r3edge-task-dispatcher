@@ -1,4 +1,4 @@
-package com.r3edge.tasks.dispatcher;
+package com.r3edge.tasks.dispatcher.core;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
