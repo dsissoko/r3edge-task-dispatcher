@@ -132,7 +132,7 @@ dependencyManagement {
 
 dependencies {   
     implementation 'org.springframework.cloud:spring-cloud-starter'
-    implementation "com.r3edge:r3edge-task-dispatcher:0.1.5"
+    implementation "com.r3edge:r3edge-task-dispatcher:0.1.7"
     implementation 'org.jobrunr:jobrunr-spring-boot-3-starter:8.0.1' #pour une implementation jobrunr de la lib
 }
 
