@@ -1,4 +1,4 @@
-package com.r3edge.tasks.dispatcher;
+package com.r3edge.tests.tasks;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;

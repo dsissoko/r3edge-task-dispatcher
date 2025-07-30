@@ -1,4 +1,4 @@
-package com.r3edge.tasks.dispatcher;
+package com.r3edge.tests.tasks;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -13,19 +13,19 @@ import org.springframework.cloud.context.scope.refresh.RefreshScopeRefreshedEven
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.r3edge.tasks.TestApplication;
 import com.r3edge.tasks.dispatcher.core.Task;
 import com.r3edge.tasks.dispatcher.core.TaskConfiguration;
 import com.r3edge.tasks.dispatcher.core.TaskDispatcher;
 import com.r3edge.tasks.dispatcher.core.TaskHandler;
 import com.r3edge.tasks.dispatcher.core.TaskHandlerRegistry;
+import com.r3edge.tests.TestApplication;
 
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("multistrategy")
+@ActiveProfiles("jobrunr")
 @Slf4j
-class MultiStrategyTaskDispatcherTest {
+class JobRunrTaskDispatcherTest {
 
 	@Autowired
 	private TaskConfiguration taskConfiguration;
@@ -37,6 +37,11 @@ class MultiStrategyTaskDispatcherTest {
 	private ApplicationEventPublisher eventPublisher;
 	@Autowired
 	org.springframework.core.env.Environment env;
+
+	@Test
+	void shouldHaveCorrectStrategy() {
+		assertThat(env.getProperty("r3edge.tasks.strategy")).isEqualTo("jobrunr");
+	}
 
 	@Test
 	void shouldLoadTasksFromYaml() {
@@ -68,6 +73,7 @@ class MultiStrategyTaskDispatcherTest {
 		Task task3 = Task.builder().id("task-003").type("unknown-type").meta(Map.of("data", "some data")).build();
 
 		taskConfiguration.setDefinitions(List.of(task1, task2, task3));
+
 	}
 
 	@Test

@@ -3,7 +3,7 @@ package com.r3edge.tasks.dispatcher.impl.jobrunr;
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * Auto-configuration conditionnelle pour activer la stratégie JobRunr
@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Import;
  */
 @AutoConfiguration
 @ConditionalOnClass(JobScheduler.class)
-@Import(JobRunrTaskStrategyConfig.class)
-public class JobRunrAutoConfiguration {
-    // vide, mais safe
+@ComponentScan("com.r3edge.tasks.dispatcher.impl.jobrunr")
+public class JobRunrTaskAutoConfiguration {
 }

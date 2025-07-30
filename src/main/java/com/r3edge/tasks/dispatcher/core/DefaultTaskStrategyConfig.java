@@ -1,12 +1,7 @@
-package com.r3edge.tasks.dispatcher.impl.defaultspring;
+package com.r3edge.tasks.dispatcher.core;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import com.r3edge.tasks.dispatcher.core.ITaskExecutionListener;
-import com.r3edge.tasks.dispatcher.core.ITaskExecutor;
-import com.r3edge.tasks.dispatcher.core.ITaskScheduler;
-import com.r3edge.tasks.dispatcher.core.TaskInvokerService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
  * Configuration Spring pour la stratégie de tâches par défaut.
  */
 @Configuration
-//@ConditionalOnProperty(prefix = "r3edge.tasks", name = "strategy", havingValue = "default", matchIfMissing = true)
 @Slf4j
 public class DefaultTaskStrategyConfig {
 

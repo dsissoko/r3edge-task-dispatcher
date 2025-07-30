@@ -1,4 +1,4 @@
-package com.r3edge.tasks.dispatcher;
+package com.r3edge.tests.tasks;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;

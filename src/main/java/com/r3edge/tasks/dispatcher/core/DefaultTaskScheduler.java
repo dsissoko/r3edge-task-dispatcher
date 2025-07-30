@@ -1,4 +1,4 @@
-package com.r3edge.tasks.dispatcher.impl.defaultspring;
+package com.r3edge.tasks.dispatcher.core;
 
 import java.util.Map;
 import java.util.Set;
@@ -10,12 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
-
-import com.r3edge.tasks.dispatcher.core.ITaskExecutionListener;
-import com.r3edge.tasks.dispatcher.core.ITaskScheduler;
-import com.r3edge.tasks.dispatcher.core.Task;
-import com.r3edge.tasks.dispatcher.core.TaskHandler;
-import com.r3edge.tasks.dispatcher.core.TaskInvokerService;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
