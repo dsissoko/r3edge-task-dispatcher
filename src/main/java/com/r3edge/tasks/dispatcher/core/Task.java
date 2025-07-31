@@ -1,6 +1,6 @@
 package com.r3edge.tasks.dispatcher.core;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ public class Task {
     @Builder.Default
     private String cron = null;
     @Builder.Default
-    private LocalDateTime at = null;
+    private Instant at = null;
     @Builder.Default
     private boolean redispatchedOnRefresh= false; 
     private Map<String, Object> meta;
