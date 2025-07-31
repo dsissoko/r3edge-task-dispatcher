@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.LoggerFactory;
+
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +31,8 @@ public class DefaultTaskExecutor implements ITaskExecutor {
 	@Override
 	public void execute(Task task, TaskHandler handler) {
 		log.info("✅ Mise en file d'attente via DefaultTaskScheduler : id={}, at={}", task.getId(), task.getAt());
-		taskInvokerService.invokeNow(task);
+		taskInvokerService.execute(task, LoggerFactory.getLogger(handler.getClass()));
+		
 	}
 
 	@Override

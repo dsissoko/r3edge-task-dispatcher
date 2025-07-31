@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 /**
- * À utiliser uniquement dans les classes liées à JobRunr.
+ * Utilitaires communs.
  */
 @Component
 public class TasksUtils {

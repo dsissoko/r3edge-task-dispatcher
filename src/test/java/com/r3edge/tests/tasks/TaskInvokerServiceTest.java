@@ -10,11 +10,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
+import com.r3edge.tasks.dispatcher.core.ITaskExecutionListener;
+import com.r3edge.tasks.dispatcher.core.SimpleTaskExecutionListener;
 import com.r3edge.tasks.dispatcher.core.Task;
 import com.r3edge.tasks.dispatcher.core.TaskHandler;
 import com.r3edge.tasks.dispatcher.core.TaskHandlerRegistry;
 import com.r3edge.tasks.dispatcher.core.TaskInvokerService;
 
+/**
+ * Tests unitaires pour TaskInvokerService.
+ * 
+ * Vérifie l'exécution instrumentée, la gestion des handlers manquants et des exceptions dans les handlers.
+ */
 class TaskInvokerServiceTest {
 
     private TaskHandlerRegistry registry;
@@ -32,16 +39,16 @@ class TaskInvokerServiceTest {
             public void handle(Task task) {
                 // comportement simulé OK
             }
-            
-			@Override
-			public void handle(Task task, Logger logger) {
-				// TODO Auto-generated method stub
-				
-			}
+
+            @Override
+            public void handle(Task task, Logger logger) {
+                // comportement simulé OK
+            }
         };
 
         registry = new TaskHandlerRegistry(List.of(dummyHandler));
-        invoker = new TaskInvokerService(registry);
+        ITaskExecutionListener listener = new SimpleTaskExecutionListener();
+        invoker = new TaskInvokerService(registry, listener);
     }
 
     @Test
@@ -53,7 +60,7 @@ class TaskInvokerServiceTest {
                 .meta(Map.of())
                 .build();
 
-        assertThatCode(() -> invoker.invokeNow(task)).doesNotThrowAnyException();
+        assertThatCode(() -> invoker.execute(task, null)).doesNotThrowAnyException();
     }
 
     @Test
@@ -65,7 +72,7 @@ class TaskInvokerServiceTest {
                 .meta(Map.of())
                 .build();
 
-        assertThatThrownBy(() -> invoker.invokeNow(task))
+        assertThatThrownBy(() -> invoker.execute(task, null))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("Aucun handler pour le type");
     }
@@ -82,12 +89,11 @@ class TaskInvokerServiceTest {
             public void handle(Task task) {
                 throw new RuntimeException("boum");
             }
-            
-			@Override
-			public void handle(Task task, Logger logger) {
-				// TODO Auto-generated method stub
-				
-			}
+
+            @Override
+            public void handle(Task task, Logger logger) {
+                throw new RuntimeException("boum");
+            }
         };
 
         registry.addHandler(failingHandler);
@@ -99,9 +105,8 @@ class TaskInvokerServiceTest {
                 .meta(Map.of())
                 .build();
 
-        assertThatThrownBy(() -> invoker.invokeNow(task))
+        assertThatThrownBy(() -> invoker.execute(task, null))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("boum");
     }
 }
-

@@ -21,7 +21,7 @@ public class DefaultTaskStrategyConfig {
      */
 	@Bean
 	public ITaskScheduler defaultTaskScheduler(TaskInvokerService taskInvokerService, ITaskExecutionListener listener) {
-		return new DefaultTaskScheduler(taskInvokerService, listener); // à créer si besoin
+		return new DefaultTaskScheduler(taskInvokerService); // à créer si besoin
 	}
 
     /**

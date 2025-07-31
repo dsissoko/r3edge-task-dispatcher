@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -24,20 +23,18 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 	private final TaskScheduler scheduler;
 	private final TaskInvokerService taskInvokerService;
 	private final Map<String, ScheduledFuture<?>> scheduled = new ConcurrentHashMap<>();
-	private final ITaskExecutionListener listener;
 
 	/**
 	 * @param invokerService service chargé d'invoquer la tâche
 	 * @param listener       listener de cycle de vie des tâches
 	 */
-	public DefaultTaskScheduler(TaskInvokerService invokerService, ITaskExecutionListener listener) {
+	public DefaultTaskScheduler(TaskInvokerService invokerService) {
 		ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
 		threadPoolTaskScheduler.setPoolSize(2);
 		threadPoolTaskScheduler.setThreadNamePrefix("r3edge-task-");
 		threadPoolTaskScheduler.initialize();
 		this.scheduler = threadPoolTaskScheduler;
 		this.taskInvokerService = invokerService;
-		this.listener = listener;
 	}
 
 	/** Annule toutes les tâches et arrête le scheduler. */
@@ -69,8 +66,7 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 
 	    log.info("✅ Planification via DefaultTaskScheduler : id={}, cron={}", task.getId(), cron);
 
-	    Logger logger = LoggerFactory.getLogger(handler.getClass());
-	    Runnable runnable = taskInvokerService.createRunnable(task, handler, listener, logger);
+	    Runnable runnable = taskInvokerService.createRunnable(task, LoggerFactory.getLogger(handler.getClass()));
 	    ScheduledFuture<?> future = scheduler.schedule(runnable, new CronTrigger(cron));
 
 	    if (future != null) {

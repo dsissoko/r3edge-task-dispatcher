@@ -41,11 +41,18 @@ ext {
 }
 
 repositories {
-    mavenCentral()
     mavenLocal()
+    mavenCentral()
     gradlePluginPortal()
     // 🔧 Nécessaire pour Spring Cloud
     maven { url 'https://repo.spring.io/release' }
+}
+
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor 0, 'seconds'
+        cacheDynamicVersionsFor 0, 'seconds'
+    }
 }
 
 dependencies {
@@ -55,11 +62,12 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     // Spring minimum requis pour la lib
-    compileOnly 'org.springframework.cloud:spring-cloud-context:4.3.0'
+    //compileOnly 'org.springframework.cloud:spring-cloud-context:4.3.0'
+    api 'org.springframework.cloud:spring-cloud-context:4.1.2'
     compileOnly  'org.springframework.boot:spring-boot-starter'
     compileOnly 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
     // Gestion des tâches
-    implementation 'org.jobrunr:jobrunr-spring-boot-3-starter:8.0.1'
+    compileOnly 'org.jobrunr:jobrunr-spring-boot-3-starter:8.0.1'
 
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.mockito:mockito-junit-jupiter'
@@ -68,7 +76,8 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.projectlombok:lombok'    
     
-    testImplementation 'org.springframework.cloud:spring-cloud-context:4.3.0'
+    //testImplementation 'org.springframework.cloud:spring-cloud-context:4.3.0'
+    testImplementation 'org.springframework.cloud:spring-cloud-context:4.1.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
     testImplementation 'org.springframework.boot:spring-boot-starter-web'

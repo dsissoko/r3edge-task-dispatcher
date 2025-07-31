@@ -20,7 +20,7 @@ public class TaskJobRequestHandler implements JobRequestHandler<TaskJobRequest> 
     @Override
     public void run(TaskJobRequest request) throws Exception {
     	Logger logger = request.getLogger();
-        invoker.invokeNow(request.getTask(), logger);
+    	invoker.execute(request.getTask(), logger);
     }
 }
 
