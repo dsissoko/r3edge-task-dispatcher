@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.jobrunr.scheduling.BackgroundJobRequest;
-import org.slf4j.Logger;
 
 import com.r3edge.tasks.dispatcher.core.ITaskScheduler;
 import com.r3edge.tasks.dispatcher.core.Task;
