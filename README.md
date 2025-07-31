@@ -203,7 +203,7 @@ r3edge:
         strategy: default
         type: datacollect
         enabled: true
-        at: "2025-07-31T13:30:00Z" #Format ISO-8601 UTC attendu (ex: "2025-07-31T13:30:00Z")
+        at: "2025-07-31T15:32:00Z" # ou "2025-07-31T17:32:00+02:00": Format ISO-8601 UTC
         meta:
           message: "KucoinBTC1mn"
           market: "Kucoin"
@@ -213,7 +213,7 @@ r3edge:
         strategy: jobrunr
         type: datacollect
         enabled: true
-        at: "2025-07-31T13:30:00Z"
+        at: "2025-07-31T15:32:00Z" # ou "2025-07-31T17:32:00+02:00": Format ISO-8601 UTC
         meta:
           message: "KucoinBTC1mn"
           market: "Kucoin"
