@@ -16,7 +16,11 @@ public class TaskInvokerService {
 	private final TaskHandlerRegistry registry;
 	private final ITaskExecutionListener defaultListener;
 
-
+	/**
+	 * Exécute immédiatement une tâche avec instrumentation et le logger fourni.
+	 * @param task La tâche à exécuter.
+	 * @param logger Le logger contextuel, ou null pour fallback handler.
+	 */
     public void execute(Task task, Logger logger) {
         // Résolution du handler en fonction du type de tâche
         TaskHandler handler = registry.getHandler(task.getType())
@@ -27,6 +31,12 @@ public class TaskInvokerService {
         r.run();
     }
 
+    /**
+     * Crée un Runnable instrumenté pour la tâche et le logger fournis.
+     * @param task La tâche à exécuter.
+     * @param logger Le logger contextuel, ou null pour fallback handler.
+     * @return Un Runnable prêt à exécuter la tâche.
+     */
     public Runnable createRunnable(Task task, Logger logger) {
         TaskHandler handler = registry.getHandler(task.getType())
             .orElseThrow(() -> new IllegalStateException("Aucun handler pour le type de tâche : " + task.getType()));

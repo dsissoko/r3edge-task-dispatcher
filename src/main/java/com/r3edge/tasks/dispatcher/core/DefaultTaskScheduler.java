@@ -26,7 +26,6 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 
 	/**
 	 * @param invokerService service chargé d'invoquer la tâche
-	 * @param listener       listener de cycle de vie des tâches
 	 */
 	public DefaultTaskScheduler(TaskInvokerService invokerService) {
 		ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
