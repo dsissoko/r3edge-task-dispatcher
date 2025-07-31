@@ -58,6 +58,7 @@ public class DefaultTaskExecutor implements ITaskExecutor {
 	    } else {
 	        taskInvokerService.execute(task, org.slf4j.LoggerFactory.getLogger(handler.getClass()));
 	    }
+	    executedTaskIds.add(task.getId());
 	}
 
 
