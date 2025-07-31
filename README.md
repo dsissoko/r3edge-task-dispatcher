@@ -132,7 +132,7 @@ dependencyManagement {
 
 dependencies { 
     ...  
-    // version actuelle 0.1.9
+    // version actuelle 0.2.0
     implementation "com.r3edge:r3edge-task-dispatcher:0.2.0"
     // spring boot nécessaire
     implementation 'org.springframework.boot:spring-boot-starter-web'
