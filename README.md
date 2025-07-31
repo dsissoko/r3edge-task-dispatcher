@@ -15,7 +15,7 @@ An auto-translated English version is available here:
 - 🧾 Définition déclarative des tâches dans application.yml
 - 🔁 Exécution automatique au démarrage de l’application
 - Planification automatique au démarrage (si cron)
-- implementation par défaut ou jobrunr possible (si dans votre classpath)
+- implémentation par défaut ou jobrunr possible (si dans votre classpath)
 - Refresh automatique des données de configuration des tâches (si busrefresh avec config server mis en place)
 
 ---
@@ -130,10 +130,17 @@ dependencyManagement {
     }
 }
 
-dependencies {   
-    implementation 'org.springframework.cloud:spring-cloud-starter'
-    implementation "com.r3edge:r3edge-task-dispatcher:0.1.7"
-    implementation 'org.jobrunr:jobrunr-spring-boot-3-starter:8.0.1' #pour une implementation jobrunr de la lib
+dependencies { 
+    ...  
+    // version actuelle 0.1.9
+    implementation "com.r3edge:r3edge-task-dispatcher:0.1.9"
+    // spring boot nécessaire
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    
+    // Les dépendances suivante sont optionnelles mais nécessaires pour bénéficier de l'implémentation jobrunr
+    // Pour bénéficier de la configuration automatique d'une datasource pour jobrunr
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.jobrunr:jobrunr-spring-boot-3-starter:8.0.1'
 }
 
 ```
@@ -172,21 +179,66 @@ public class Handler1 implements TaskHandler {
 ```yaml
 r3edge:
   tasks:
+    skip-late-tasks: true # si True alors les tâches dont le parametre At est dépassé ne sont pas exécutés
     definitions:
-      - id: handler1
-        strategy: default ## jobrunr est également disponible, si aucune strategy spécifiée alors fallback vers default
-        type: cleanup
-        enabled: true
-        cron: "0 * * * * *"
-        meta:
-          target: "bar"
-          dataset: "1,3,40"
-      - id: handler2
-        type: init
+      - id: testDefaultFireAndForgetDatacollect
+        strategy: default
+        type: datacollect
         enabled: true
         meta:
-          target: "foo"
-          other: "nice data"
+          message: "KucoinBTC1mn"
+          market: "Kucoin"
+          pair: "BTC"
+          timeframe: "1mn"
+      - id: testJobRunrFireAndForgetDatacollect
+        strategy: jobrunr
+        type: datacollect
+        enabled: true
+        meta:
+          message: "KucoinBTC1mn"
+          market: "Kucoin"
+          pair: "BTC"
+          timeframe: "1mn"
+      - id: testDefaultFireAndForgetAtDatacollect
+        strategy: default
+        type: datacollect
+        enabled: true
+        at: "2025-07-31T13:30:00Z" #Format ISO-8601 UTC attendu (ex: "2025-07-31T13:30:00Z")
+        meta:
+          message: "KucoinBTC1mn"
+          market: "Kucoin"
+          pair: "BTC"
+          timeframe: "1mn"
+      - id: testJobRunrFireAndForgetAtDatacollect
+        strategy: jobrunr
+        type: datacollect
+        enabled: true
+        at: "2025-07-31T13:30:00Z"
+        meta:
+          message: "KucoinBTC1mn"
+          market: "Kucoin"
+          pair: "BTC"
+          timeframe: "1mn"
+      - id: testDefaultScheduleDatacollect
+        strategy: default
+        type: datacollect
+        enabled: true
+        cron: "0 * * * * *"  # Exécute toutes les minutes
+        meta:
+          message: "KucoinBTC1mn"
+          market: "Kucoin"
+          pair: "BTC"
+          timeframe: "1mn"
+      - id: testJobRunrScheduleDatacollect
+        strategy: jobrunr
+        type: datacollect
+        enabled: true
+        cron: "0 * * * * *"  # Exécute toutes les minutes
+        meta:
+          message: "KucoinBTC1mn"
+          market: "Kucoin"
+          pair: "BTC"
+          timeframe: "1mn"
 ```
 
 ---
