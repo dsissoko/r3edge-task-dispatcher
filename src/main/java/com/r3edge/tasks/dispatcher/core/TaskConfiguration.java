@@ -24,6 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 @ConfigurationProperties(prefix = "r3edge.tasks")
 public class TaskConfiguration {
 	
+	/**
+	 * Si vrai, les tâches dont la date 'at' est dépassée seront ignorées/skippées.
+	 * Si faux, elles seront exécutées immédiatement (comportement JobRunr natif).
+	 */
+	private boolean skipLateTasks = false; // false par défaut pour compatibilité JobRunr
     private List<Task> definitions = new ArrayList<>();
 
     /**

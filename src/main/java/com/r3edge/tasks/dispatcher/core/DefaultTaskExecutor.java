@@ -1,5 +1,6 @@
 package com.r3edge.tasks.dispatcher.core;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultTaskExecutor implements ITaskExecutor {
 
+	private final TaskConfiguration taskConfiguration;
 	private final TaskInvokerService taskInvokerService;
 	// Suivi des tâches dispatchées
 	private final Set<String> executedTaskIds = ConcurrentHashMap.newKeySet();
@@ -37,15 +39,22 @@ public class DefaultTaskExecutor implements ITaskExecutor {
 	    if (task.getAt() != null) {
 	        java.time.Instant now = java.time.Instant.now();
 	        java.time.Instant at = task.getAt();
-	        long delayMillis = java.time.Duration.between(now, at).toMillis();
-	        if (delayMillis < 0) delayMillis = 0; // Si "at" est passé, exécution immédiate
+	        long delayMillis = Duration.between(now, at).toMillis();
+
+	        if (delayMillis < 0) {
+	        	log.warn("⚠️ Tâche {} avec date at dépassée : {}", task.getId(), at);
+		        if (taskConfiguration.isSkipLateTasks()) {
+		        	log.warn("⚠️ Tâche {} ignorée car date at dépassée : {}", task.getId(), at);
+		        	return;
+		        }	        	
+	        }
 
 	        DELAY_EXECUTOR.schedule(() -> {
-	            log.info("▶️ Exécution différée (at) de la tâche {} à {}", task.getId(), at);
+	            log.info("▶️ Exécution différée (ou immédiate pour les tâches en retard) (at) de la tâche {} à {}", task.getId(), at);
 	            taskInvokerService.execute(task, org.slf4j.LoggerFactory.getLogger(handler.getClass()));
 	        }, delayMillis, java.util.concurrent.TimeUnit.MILLISECONDS);
 
-	        log.info("⏳ Tâche {} planifiée pour exécution différée à {}", task.getId(), at);
+	        log.info("✅ Tâche {} planifiée pour exécution différée (ou immédiate pour les tâches en retard) à {}", task.getId(), at);
 	    } else {
 	        taskInvokerService.execute(task, org.slf4j.LoggerFactory.getLogger(handler.getClass()));
 	    }

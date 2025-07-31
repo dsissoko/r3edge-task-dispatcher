@@ -31,7 +31,7 @@ public class DefaultTaskStrategyConfig {
      * @return implémentation par défaut de {@link ITaskExecutor}
      */
 	@Bean
-	public ITaskExecutor defaultTaskExecutor(TaskInvokerService taskInvokerService) {
-		return new DefaultTaskExecutor(taskInvokerService);
+	public ITaskExecutor defaultTaskExecutor(TaskInvokerService taskInvokerService, TaskConfiguration config) {
+		return new DefaultTaskExecutor(config, taskInvokerService);
 	}
 }

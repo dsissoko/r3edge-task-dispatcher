@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.r3edge.tasks.dispatcher.core.ITaskExecutor;
 import com.r3edge.tasks.dispatcher.core.ITaskScheduler;
+import com.r3edge.tasks.dispatcher.core.TaskConfiguration;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +37,7 @@ public class JobRunrTaskStrategyConfig {
 	 * @return Une instance de {@link JobRunrTaskExecutor}.
 	 */
 	@Bean
-	public ITaskExecutor jobRunrTaskExecutor(JobScheduler jobScheduler) {
-		return new JobRunrTaskExecutor();
+	public ITaskExecutor jobRunrTaskExecutor(TaskConfiguration config) {
+		return new JobRunrTaskExecutor(config);
 	}
 }

@@ -9,6 +9,7 @@ import org.jobrunr.scheduling.BackgroundJobRequest;
 
 import com.r3edge.tasks.dispatcher.core.ITaskExecutor;
 import com.r3edge.tasks.dispatcher.core.Task;
+import com.r3edge.tasks.dispatcher.core.TaskConfiguration;
 import com.r3edge.tasks.dispatcher.core.TaskHandler;
 import com.r3edge.tasks.dispatcher.core.TasksUtils;
 
@@ -24,17 +25,33 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JobRunrTaskExecutor implements ITaskExecutor {
 
+	private final TaskConfiguration taskConfiguration;
 	private final Set<String> executedTaskIds = ConcurrentHashMap.newKeySet();
 
 	@Override
 	public void execute(Task task, TaskHandler handler) {
-		UUID jobId = TasksUtils.getJobId(task);
-		if (task.getAt() != null) {
-			BackgroundJobRequest.schedule(jobId, task.getAt(), new TaskJobRequest(task, handler.getClass().getName()));
-		} else {
-			BackgroundJobRequest.enqueue(jobId, new TaskJobRequest(task, handler.getClass().getName()));
-		}
-		executedTaskIds.add(task.getId());
+	    UUID jobId = TasksUtils.getJobId(task);
+
+	    if (task.getAt() != null) {
+	        java.time.Instant now = java.time.Instant.now();
+	        java.time.Instant at = task.getAt();
+	        long delayMillis = java.time.Duration.between(now, at).toMillis();
+
+	        if (delayMillis < 0) {
+	            log.warn("⚠️ Tâche {} avec date at dépassée : {}", task.getId(), at);
+	            if (taskConfiguration.isSkipLateTasks()) {
+	                log.warn("⚠️ Tâche {} ignorée car date at dépassée : {}", task.getId(), at);
+	                return;
+	            }
+	        }
+
+	        BackgroundJobRequest.schedule(jobId, at, new TaskJobRequest(task, handler.getClass().getName()));
+	        log.info("✅ Tâche {} planifiée avec JobRunr pour exécution différée à {}", task.getId(), at);
+	    } else {
+	        BackgroundJobRequest.enqueue(jobId, new TaskJobRequest(task, handler.getClass().getName()));
+	        log.info("✅ Tâche {} mise en file JobRunr (Fire & Forget)", task.getId());
+	    }
+	    executedTaskIds.add(task.getId());
 	}
 
 	@Override
