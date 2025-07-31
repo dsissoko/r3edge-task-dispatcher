@@ -28,6 +28,7 @@ public class DefaultTaskStrategyConfig {
      * Fournit un exécuteur de tâches basé sur l'invocation directe.
      *
      * @param taskInvokerService service d'invocation de tâches
+     * @param config Configuration globale des tâches pour l’executor par défaut.
      * @return implémentation par défaut de {@link ITaskExecutor}
      */
 	@Bean

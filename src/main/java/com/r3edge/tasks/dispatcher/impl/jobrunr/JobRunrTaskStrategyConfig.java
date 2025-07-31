@@ -33,7 +33,7 @@ public class JobRunrTaskStrategyConfig {
 	/**
 	 * Crée et retourne une instance de {@link ITaskExecutor} pour JobRunr.
 	 * 
-	 * @param jobScheduler Le planificateur de tâches JobRunr.
+	 * @param config Configuration globale des tâches utilisée pour l’executor JobRunr.
 	 * @return Une instance de {@link JobRunrTaskExecutor}.
 	 */
 	@Bean
