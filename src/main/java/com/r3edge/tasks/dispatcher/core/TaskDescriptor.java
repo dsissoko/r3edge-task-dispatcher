@@ -9,15 +9,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Représente une tâche générique définie par un identifiant, un type et des métadonnées.
+ * Représente une tâche générique définie par un identifiant, un handler et des métadonnées.
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Task {
+public class TaskDescriptor {
     private String id;
-    private String type;
+    private String handler;
     @Builder.Default
     private boolean enabled = true;
     @Builder.Default
@@ -28,5 +28,5 @@ public class Task {
     private Instant at = null;
     @Builder.Default
     private boolean redispatchedOnRefresh= false; 
-    private Map<String, Object> meta;
+    private Map<String, String> meta;
 }

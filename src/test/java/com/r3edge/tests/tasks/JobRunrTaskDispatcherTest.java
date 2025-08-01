@@ -13,8 +13,8 @@ import org.springframework.cloud.context.scope.refresh.RefreshScopeRefreshedEven
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.r3edge.tasks.dispatcher.core.Task;
-import com.r3edge.tasks.dispatcher.core.TaskConfiguration;
+import com.r3edge.tasks.dispatcher.core.TaskDescriptor;
+import com.r3edge.tasks.dispatcher.core.TaskDescriptorsProperties;
 import com.r3edge.tasks.dispatcher.core.TaskDispatcher;
 import com.r3edge.tasks.dispatcher.core.TaskHandler;
 import com.r3edge.tasks.dispatcher.core.TaskHandlerRegistry;
@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 class JobRunrTaskDispatcherTest {
 
 	@Autowired
-	private TaskConfiguration taskConfiguration;
+	private TaskDescriptorsProperties taskConfiguration;
 	@Autowired
 	TaskHandlerRegistry registry;
 	@Autowired
@@ -39,13 +39,8 @@ class JobRunrTaskDispatcherTest {
 	org.springframework.core.env.Environment env;
 
 	@Test
-	void shouldHaveCorrectStrategy() {
-		assertThat(env.getProperty("r3edge.tasks.strategy")).isEqualTo("jobrunr");
-	}
-
-	@Test
 	void shouldLoadTasksFromYaml() {
-		List<Task> tasks = taskConfiguration.getDefinitions();
+		List<TaskDescriptor> tasks = taskConfiguration.getDefinitions();
 		assertThat(tasks).isNotNull().isNotEmpty();
 	}
 
@@ -57,20 +52,20 @@ class JobRunrTaskDispatcherTest {
 
 	@Test
 	void shouldDispatchPrintTask() {
-		Task task = Task.builder().id("test-print").type("print").enabled(true).meta(Map.of("message", "Test OK"))
+		TaskDescriptor task = TaskDescriptor.builder().id("test-print").handler("print").enabled(true).meta(Map.of("message", "Test OK"))
 				.build();
 		assertThatCode(() -> dispatcher.dispatch(task)).doesNotThrowAnyException();
 	}
 
 	@Test
 	void shouldRedispatchOnlyHotReloadEnabledTasks() {
-		Task task1 = Task.builder().id("task-001").type("print").enabled(true)
+		TaskDescriptor task1 = TaskDescriptor.builder().id("task-001").handler("print").enabled(true)
 				.meta(Map.of("message", "Hello from test")).build();
 
-		Task task2 = Task.builder().id("task-002").type("print").enabled(false)
+		TaskDescriptor task2 = TaskDescriptor.builder().id("task-002").handler("print").enabled(false)
 				.meta(Map.of("message", "This should not be printed")).build();
 
-		Task task3 = Task.builder().id("task-003").type("unknown-type").meta(Map.of("data", "some data")).build();
+		TaskDescriptor task3 = TaskDescriptor.builder().id("task-003").handler("unknown-type").meta(Map.of("data", "some data")).build();
 
 		taskConfiguration.setDefinitions(List.of(task1, task2, task3));
 
@@ -78,7 +73,7 @@ class JobRunrTaskDispatcherTest {
 
 	@Test
 	void shouldLogPrintHandlerOnTaskRemoval() {
-		Task taskToRemove = Task.builder().id("task-print-delete").type("print").enabled(true)
+		TaskDescriptor taskToRemove = TaskDescriptor.builder().id("task-print-delete").handler("print").enabled(true)
 				.meta(Map.of("message", "To be removed")).build();
 
 		taskConfiguration.setDefinitions(List.of(taskToRemove));
@@ -92,31 +87,31 @@ class JobRunrTaskDispatcherTest {
 
 	@Test
 	void shouldDispatchNewHotReloadableTask() {
-		Task existing = Task.builder().id("task-already-there").type("print").enabled(true)
+		TaskDescriptor existing = TaskDescriptor.builder().id("task-already-there").handler("print").enabled(true)
 				.meta(Map.of("message", "Je suis déjà là")).build();
 
 		taskConfiguration.setDefinitions(List.of(existing));
 		eventPublisher.publishEvent(new RefreshScopeRefreshedEvent());
-		assertThat(taskConfiguration.getDefinitions()).extracting(Task::getId).containsExactly("task-already-there");
+		assertThat(taskConfiguration.getDefinitions()).extracting(TaskDescriptor::getId).containsExactly("task-already-there");
 
-		Task newTask = Task.builder().id("task-print-new").type("print").enabled(true)
+		TaskDescriptor newTask = TaskDescriptor.builder().id("task-print-new").handler("print").enabled(true)
 				.meta(Map.of("message", "Je suis nouveau")).build();
 
 		taskConfiguration.setDefinitions(List.of(existing, newTask));
 		eventPublisher.publishEvent(new RefreshScopeRefreshedEvent());
-		assertThat(taskConfiguration.getDefinitions()).extracting(Task::getId)
+		assertThat(taskConfiguration.getDefinitions()).extracting(TaskDescriptor::getId)
 				.containsExactlyInAnyOrder("task-already-there", "task-print-new");
 	}
 
 	@Test
 	void shouldTriggerOnTaskReloadWhenTaskIsUpdated() {
-		Task initial = Task.builder().id("task-update-test").type("print").enabled(true)
+		TaskDescriptor initial = TaskDescriptor.builder().id("task-update-test").handler("print").enabled(true)
 				.meta(Map.of("message", "Ancien message")).build();
 
 		taskConfiguration.setDefinitions(List.of(initial));
 		eventPublisher.publishEvent(new RefreshScopeRefreshedEvent());
 
-		Task updated = Task.builder().id("task-update-test").type("print").enabled(true)
+		TaskDescriptor updated = TaskDescriptor.builder().id("task-update-test").handler("print").enabled(true)
 				.meta(Map.of("message", "Nouveau message")).build();
 
 		taskConfiguration.setDefinitions(List.of(updated));
@@ -128,7 +123,7 @@ class JobRunrTaskDispatcherTest {
 
 	@Test
 	void shouldNotExecuteDisabledTask() {
-		Task disabledTask = Task.builder().id("disabled-task").type("print").enabled(false)
+		TaskDescriptor disabledTask = TaskDescriptor.builder().id("disabled-task").handler("print").enabled(false)
 				.meta(Map.of("message", "Ne pas exécuter")).build();
 
 		assertThatCode(() -> dispatcher.dispatch(disabledTask)).doesNotThrowAnyException();
@@ -136,7 +131,7 @@ class JobRunrTaskDispatcherTest {
 
 	@Test
 	void shouldIgnoreTaskWhenNoHandlerFound() {
-		Task unknownTask = Task.builder().id("unknown-handler").type("unknown-type").enabled(true).build();
+		TaskDescriptor unknownTask = TaskDescriptor.builder().id("unknown-handler").handler("unknown-type").enabled(true).build();
 
 		assertThatCode(() -> dispatcher.dispatch(unknownTask)).doesNotThrowAnyException();
 	}

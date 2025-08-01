@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class TaskStrategyRouter {
 
-    private final Map<String, ITaskExecutor> executors;
-    private final Map<String, ITaskScheduler> schedulers;
+    private final Map<String, IFireAndForgetExecutor> executors;
+    private final Map<String, IScheduledExecutor> schedulers;
 
     /**
      * Construit un nouveau routeur de stratégie de tâches.
@@ -23,14 +23,14 @@ public class TaskStrategyRouter {
      * @param schedulerBeans La liste des planificateurs de tâches disponibles.
      */
     public TaskStrategyRouter(
-        List<ITaskExecutor> executorBeans,
-        List<ITaskScheduler> schedulerBeans
+        List<IFireAndForgetExecutor> executorBeans,
+        List<IScheduledExecutor> schedulerBeans
     ) {
         this.executors = executorBeans.stream()
-            .collect(Collectors.toMap(ITaskExecutor::strategyKey, Function.identity()));
+            .collect(Collectors.toMap(IFireAndForgetExecutor::strategyKey, Function.identity()));
 
         this.schedulers = schedulerBeans.stream()
-            .collect(Collectors.toMap(ITaskScheduler::strategyKey, Function.identity()));
+            .collect(Collectors.toMap(IScheduledExecutor::strategyKey, Function.identity()));
     }
 
     /**
@@ -38,7 +38,7 @@ public class TaskStrategyRouter {
      * @param task La tâche pour laquelle résoudre l'exécuteur.
      * @return L'exécuteur de tâches résolu.
      */
-    public ITaskExecutor resolveExecutor(Task task) {
+    public IFireAndForgetExecutor resolveExecutor(TaskDescriptor task) {
         return executors.getOrDefault(task.getStrategy(), executors.get("default"));
     }
 
@@ -47,7 +47,7 @@ public class TaskStrategyRouter {
      * @param task La tâche pour laquelle résoudre le planificateur.
      * @return Le planificateur de tâches résolu.
      */
-    public ITaskScheduler resolveScheduler(Task task) {
+    public IScheduledExecutor resolveScheduler(TaskDescriptor task) {
         return schedulers.getOrDefault(task.getStrategy(), schedulers.get("default"));
     }
     
@@ -55,7 +55,7 @@ public class TaskStrategyRouter {
      * Retourne tous les planificateurs connus, pour inspection ou nettoyage global.
      * @return Liste de tous les planificateurs.
      */
-    public Collection<ITaskScheduler> allSchedulers() {
+    public Collection<IScheduledExecutor> allSchedulers() {
         return schedulers.values();
     }
 
@@ -63,7 +63,7 @@ public class TaskStrategyRouter {
      * Retourne tous les exécuteurs connus, pour inspection ou nettoyage global.
      * @return Liste de tous les exécuteurs.
      */
-    public Collection<ITaskExecutor> allExecutors() {
+    public Collection<IFireAndForgetExecutor> allExecutors() {
         return executors.values();
     }
 }

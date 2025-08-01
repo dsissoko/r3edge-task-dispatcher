@@ -2,7 +2,10 @@ package com.r3edge.tests.tasks;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,34 +14,34 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.r3edge.tasks.dispatcher.core.ITaskExecutor;
-import com.r3edge.tasks.dispatcher.core.ITaskScheduler;
-import com.r3edge.tasks.dispatcher.core.Task;
-import com.r3edge.tasks.dispatcher.core.TaskConfiguration;
+import com.r3edge.tasks.dispatcher.core.IFireAndForgetExecutor;
+import com.r3edge.tasks.dispatcher.core.IScheduledExecutor;
+import com.r3edge.tasks.dispatcher.core.TaskDescriptor;
+import com.r3edge.tasks.dispatcher.core.TaskDescriptorsProperties;
 import com.r3edge.tasks.dispatcher.core.TaskDispatcher;
 import com.r3edge.tasks.dispatcher.core.TaskHandlerRegistry;
 import com.r3edge.tasks.dispatcher.core.TaskStrategyRouter;
 
 public class TaskRefreshLifecycleTest {
 
-    private TaskConfiguration taskConfiguration;
+    private TaskDescriptorsProperties taskConfiguration;
     private TaskHandlerRegistry registry;
     private TaskStrategyRouter strategyRouter;
     private TaskDispatcher dispatcher;
 
     @BeforeEach
     void setup() {
-        taskConfiguration = mock(TaskConfiguration.class);
+        taskConfiguration = mock(TaskDescriptorsProperties.class);
         registry = mock(TaskHandlerRegistry.class);
         strategyRouter = mock(TaskStrategyRouter.class);
-        dispatcher = new TaskDispatcher(registry, taskConfiguration, strategyRouter);
+        dispatcher = new TaskDispatcher(taskConfiguration, strategyRouter);
     }
 
     @Test
     void refreshTasks_shouldCleanupAndRedispatch() {
         // GIVEN: deux tâches fictives
-        Task task1 = Task.builder().id("task-001").type("cleanup").strategy("default").enabled(true).build();
-        Task task2 = Task.builder().id("task-002").type("cleanup").strategy("jobrunr").enabled(true).build();
+        TaskDescriptor task1 = TaskDescriptor.builder().id("task-001").handler("cleanup").strategy("default").enabled(true).build();
+        TaskDescriptor task2 = TaskDescriptor.builder().id("task-002").handler("cleanup").strategy("jobrunr").enabled(true).build();
 
         when(taskConfiguration.getDefinitions()).thenReturn(List.of(task1, task2));
 
@@ -46,10 +49,10 @@ public class TaskRefreshLifecycleTest {
         when(registry.getHandler(anyString())).thenReturn(Optional.of(new CleanUpHandler()));
 
         // Mocks des executors/schedulers
-        ITaskExecutor mockExecutor = mock(ITaskExecutor.class);
+        IFireAndForgetExecutor mockExecutor = mock(IFireAndForgetExecutor.class);
         when(mockExecutor.getExecutedTaskIds()).thenReturn(Set.of("task-999"));
 
-        ITaskScheduler mockScheduler = mock(ITaskScheduler.class);
+        IScheduledExecutor mockScheduler = mock(IScheduledExecutor.class);
         when(mockScheduler.getScheduledTaskIds()).thenReturn(Set.of("task-999"));
 
         when(strategyRouter.resolveExecutor(any())).thenReturn(mockExecutor);

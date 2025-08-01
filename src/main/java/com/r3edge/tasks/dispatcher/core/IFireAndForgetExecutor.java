@@ -6,14 +6,13 @@ import java.util.Set;
  * SPI pour exécuter des tâches ponctuelles ou planifiées. Chaque implémentation
  * correspond à une stratégie d'exécution.
  */
-public interface ITaskExecutor {
+public interface IFireAndForgetExecutor {
 	/**
 	 * Executes a given task with a specific handler.
 	 * 
-	 * @param task    The task to execute.
-	 * @param handler The handler to use for execution.
+	 * @param task descriptor de la tâche à exécuter.
 	 */
-	void execute(Task task, TaskHandler handler);
+	void execute(TaskDescriptor task);
 
 	/**
 	 * Returns the strategy key for this executor.
@@ -25,9 +24,9 @@ public interface ITaskExecutor {
 	/**
 	 * Annule l'exécution d'une tâche cron ponctuelle.
 	 *
-	 * @param task la tâche à annuler.
+	 * @param task descriptor de la tâche à annuler.
 	 */
-	void cancel(Task task);
+	void cancel(TaskDescriptor task);
 
 	/**
 	 * Retourne les identifiants des tâches exécutées par cette stratégie.

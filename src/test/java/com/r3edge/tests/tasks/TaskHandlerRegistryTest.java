@@ -7,9 +7,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
 
-import com.r3edge.tasks.dispatcher.core.Task;
+import com.r3edge.tasks.dispatcher.core.TaskDescriptor;
 import com.r3edge.tasks.dispatcher.core.TaskHandler;
 import com.r3edge.tasks.dispatcher.core.TaskHandlerRegistry;
 
@@ -31,16 +30,12 @@ class TaskHandlerRegistryTest {
     void shouldRegisterAndRetrieveHandler() {
         TaskHandler handler = new TaskHandler() {
             @Override
-            public String getType() {
+            public String getName() {
                 return "print";
             }
 
-            @Override
-            public void handle(Task task) {
-            }
-
 			@Override
-			public void handle(Task task, Logger logger) {
+			public void execute(TaskDescriptor task) {
 				// TODO Auto-generated method stub
 				
 			}

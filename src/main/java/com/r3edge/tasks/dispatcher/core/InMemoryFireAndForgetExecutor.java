@@ -17,9 +17,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @RequiredArgsConstructor
 @Slf4j
-public class DefaultTaskExecutor implements ITaskExecutor {
+public class InMemoryFireAndForgetExecutor implements IFireAndForgetExecutor {
 
-	private final TaskConfiguration taskConfiguration;
+	private final TaskDescriptorsProperties taskConfiguration;
 	private final TaskInvokerService taskInvokerService;
 	// Suivi des tâches dispatchées
 	private final Set<String> executedTaskIds = ConcurrentHashMap.newKeySet();
@@ -27,14 +27,13 @@ public class DefaultTaskExecutor implements ITaskExecutor {
 
 
 	/**
-	 * Exécute la tâche donnée en utilisant le handler fourni.
+	 * Analyse la tâche et délègue son exécution à l'invoker.
 	 *
 	 * @param task    La tâche à exécuter.
-	 * @param handler Le handler responsable de la logique de la tâche.
 	 */
 	@Override
-	public void execute(Task task, TaskHandler handler) {
-	    log.info("✅ Mise en file d'attente via DefaultTaskScheduler : id={}, at={}", task.getId(), task.getAt());
+	public void execute(TaskDescriptor task) {
+	    log.info("✅ Mise en file d'attente via InMemoryScheduledExecutor : id={}, at={}", task.getId(), task.getAt());
 	    // Gestion du champ "at" pour exécution différée
 	    if (task.getAt() != null) {
 	        java.time.Instant now = java.time.Instant.now();
@@ -51,12 +50,12 @@ public class DefaultTaskExecutor implements ITaskExecutor {
 
 	        DELAY_EXECUTOR.schedule(() -> {
 	            log.info("▶️ Exécution différée (ou immédiate pour les tâches en retard) (at) de la tâche {} à {}", task.getId(), at);
-	            taskInvokerService.execute(task, org.slf4j.LoggerFactory.getLogger(handler.getClass()));
+	            taskInvokerService.execute(task);
 	        }, delayMillis, java.util.concurrent.TimeUnit.MILLISECONDS);
 
 	        log.info("✅ Tâche {} planifiée pour exécution différée (ou immédiate pour les tâches en retard) à {}", task.getId(), at);
 	    } else {
-	        taskInvokerService.execute(task, org.slf4j.LoggerFactory.getLogger(handler.getClass()));
+	        taskInvokerService.execute(task);
 	    }
 	    executedTaskIds.add(task.getId());
 	}
@@ -74,7 +73,7 @@ public class DefaultTaskExecutor implements ITaskExecutor {
 	 * @param task tâche à annuler.
 	 */
 	@Override
-	public void cancel(Task task) {
+	public void cancel(TaskDescriptor task) {
 		log.info("Cancel de la tâche (TODO) {}", task);
 	}
 
@@ -90,6 +89,6 @@ public class DefaultTaskExecutor implements ITaskExecutor {
 
 	@PostConstruct
 	private void logActivation() {
-		log.debug("✅ Bean DefaultTaskStrategyConfig initialisé");
+		log.debug("✅ Bean InMemoryExecutorConfig initialisé");
 	}
 }

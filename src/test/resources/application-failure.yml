@@ -11,13 +11,13 @@ r3edge:
     definitions:
       - id: task-001
         strategy: jobrunr
-        type: exceptionfailure
+        handler: exceptionfailure
         enabled: true
         meta:
           message: "Hello, im going to fail with an exception"
       - id: task-002
         strategy: jobrunr
-        type: silentfailure
+        handler: silentfailure
         enabled: true
         meta:
           message: "Hello, im going to fail silently"

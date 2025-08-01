@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
@@ -18,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
  * Planifie des tâches avec un cron via {@link ThreadPoolTaskScheduler}.
  */
 @Slf4j
-public class DefaultTaskScheduler implements ITaskScheduler {
+public class InMemoryScheduledExecutor implements IScheduledExecutor {
 
 	private final TaskScheduler scheduler;
 	private final TaskInvokerService taskInvokerService;
@@ -27,7 +26,7 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 	/**
 	 * @param invokerService service chargé d'invoquer la tâche
 	 */
-	public DefaultTaskScheduler(TaskInvokerService invokerService) {
+	public InMemoryScheduledExecutor(TaskInvokerService invokerService) {
 		ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
 		threadPoolTaskScheduler.setPoolSize(2);
 		threadPoolTaskScheduler.setThreadNamePrefix("r3edge-task-");
@@ -53,32 +52,30 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 	 *
 	 * @param task    La tâche à planifier. Elle doit avoir un champ {@code cron}
 	 *                non nul.
-	 * @param handler Le gestionnaire à invoquer au moment de l’exécution.
 	 */
 	@Override
-	public void schedule(Task task, TaskHandler handler) {
-	    String cron = task.getCron();
-	    if (cron == null || cron.isBlank()) {
-	        log.warn("⏭️ Tâche id={} ignorée (pas de cron défini)", task.getId());
-	        return;
-	    }
+	public void schedule(TaskDescriptor task) {
+		String cron = task.getCron();
+		if (cron == null || cron.isBlank()) {
+			log.warn("⏭️ Tâche id={} ignorée (pas de cron défini)", task.getId());
+			return;
+		}
 
-	    log.info("✅ Planification via DefaultTaskScheduler : id={}, cron={}", task.getId(), cron);
+		log.info("✅ Planification via InMemoryScheduledExecutor : id={}, cron={}", task.getId(), cron);
 
-	    Runnable runnable = taskInvokerService.createRunnable(task, LoggerFactory.getLogger(handler.getClass()));
-	    ScheduledFuture<?> future = scheduler.schedule(runnable, new CronTrigger(cron));
+		Runnable runnable = taskInvokerService.createRunnable(task);
+		ScheduledFuture<?> future = scheduler.schedule(runnable, new CronTrigger(cron));
 
-	    if (future != null) {
-	        ScheduledFuture<?> previousFuture = scheduled.put(task.getId(), future);
-	        log.info("🔄 La tâche id={} a été planifiée avec le motif cron={}", task.getId(), cron);
+		if (future != null) {
+			ScheduledFuture<?> previousFuture = scheduled.put(task.getId(), future);
+			log.info("🔄 La tâche id={} a été planifiée avec le motif cron={}", task.getId(), cron);
 
-	        if (previousFuture != null) {
-	            log.warn("🔁 La tâche {} a été remplacée par une nouvelle version", task.getId());
-	            cancelFuture(previousFuture, task.getId());
-	        }
-	    }
+			if (previousFuture != null) {
+				log.warn("🔁 La tâche {} a été remplacée par une nouvelle version", task.getId());
+				cancelFuture(previousFuture, task.getId());
+			}
+		}
 	}
-
 
 	/**
 	 * Retourne la clé de stratégie associée à ce scheduler. Cette valeur permet
@@ -95,10 +92,10 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 	 * Annule l'exécution planifiée de la tâche spécifiée, si elle est actuellement
 	 * planifiée.
 	 *
-	 * @param task la tâche à désinscrire.
+	 * @param task le descripteur de tâche à désinscrire.
 	 */
 	@Override
-	public void unschedule(Task task) {
+	public void unschedule(TaskDescriptor task) {
 		ScheduledFuture<?> future = scheduled.remove(task.getId());
 		cancelFuture(future, task.getId());
 	}
@@ -113,9 +110,9 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 		if (future != null) {
 			boolean isCanceled = future.cancel(true);
 			if (isCanceled)
-				log.info("❌ Déplanification dans DefaultTaskScheduler : id={}", taskId);
+				log.info("❌ Déplanification dans InMemoryScheduledExecutor : id={}", taskId);
 			else
-				log.warn("❌ Echec déplanification dans DefaultTaskScheduler : id={}", taskId);
+				log.warn("❌ Echec déplanification dans InMemoryScheduledExecutor : id={}", taskId);
 		} else {
 			log.debug("ℹ️ Aucune planification à annuler pour id={}", taskId);
 		}
@@ -145,6 +142,6 @@ public class DefaultTaskScheduler implements ITaskScheduler {
 
 	@PostConstruct
 	private void logActivation() {
-		log.debug("✅ Bean DefaultTaskScheduler initialisé");
+		log.debug("✅ Bean InMemoryScheduledExecutor initialisé");
 	}
 }

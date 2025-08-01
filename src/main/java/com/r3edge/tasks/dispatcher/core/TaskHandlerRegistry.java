@@ -25,19 +25,19 @@ public class TaskHandlerRegistry {
 	 */
 	public TaskHandlerRegistry(List<TaskHandler> handlers) {
 		for (TaskHandler handler : handlers) {
-			handlerMap.put(handler.getType(), handler);
-			log.info("Handler enregistré pour le type : {}", handler.getType());
+			handlerMap.put(handler.getName(), handler);
+			log.info("Handler enregistré : {}", handler.getName());
 		}
 	}
 
 	/**
 	 * Récupère un handler pour un type de tâche donné.
 	 *
-	 * @param type le type de tâche
+	 * @param name le nom du handler de tâche.
 	 * @return le handler correspondant, ou {@code null} si aucun n'est trouvé
 	 */
-	public Optional<TaskHandler> getHandler(String type) {
-	    return Optional.ofNullable(handlerMap.get(type));
+	public Optional<TaskHandler> getHandler(String name) {
+	    return Optional.ofNullable(handlerMap.get(name));
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class TaskHandlerRegistry {
 	 * @param handler le gestionnaire de tâche à enregistrer
 	 */
 	public void addHandler(TaskHandler handler) {
-		handlerMap.put(handler.getType(), handler);
-		log.info("Handler ajouté dynamiquement pour le type : {}", handler.getType());
+		handlerMap.put(handler.getName(), handler);
+		log.info("Handler ajouté dynamiquement : {}", handler.getName());
 	}
 }

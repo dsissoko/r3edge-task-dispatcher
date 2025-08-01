@@ -6,15 +6,14 @@ import java.util.Set;
  * SPI pour planifier des tâches de façon récurrente. Peut être implémenté par
  * une autre lib (JobRunr, Quartz, etc).
  */
-public interface ITaskScheduler {
+public interface IScheduledExecutor {
 
 	/**
 	 * Planifie l'exécution récurrente d'une tâche selon un cron.
 	 *
-	 * @param task    la tâche à planifier
-	 * @param handler le gestionnaire de tâches
+	 * @param task descriptor de la tâche à planifier.
 	 */
-	void schedule(Task task, TaskHandler handler);
+	void schedule(TaskDescriptor task);
 
 	/**
 	 * Retourne la clé de stratégie pour ce planificateur.
@@ -26,9 +25,9 @@ public interface ITaskScheduler {
 	/**
 	 * Déplanifie l'exécution récurrente d'une tâche cron.
 	 *
-	 * @param task la tâche à déplanifier.
+	 * @param task descriptor de la tâche à déplanifier.
 	 */
-	void unschedule(Task task);
+	void unschedule(TaskDescriptor task);
 
 	/**
 	 * Déplanifie l'exécution récurrente d'une tâche cron.

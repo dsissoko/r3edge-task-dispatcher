@@ -11,27 +11,27 @@ r3edge:
     definitions:
       - id: task-001
         strategy: jobrunr
-        type: print
+        handler: print
         enabled: true
         meta:
           message: "Hello from jobrunr task"
 
       - id: task-001bis
         strategy: default
-        type: print
+        handler: print
         enabled: true
         meta:
           message: "Hello from default task"
           
       - id: task-002
-        type: print
+        handler: print
         enabled: false
         meta:
           message: "This should not be printed"
 
       - id: task-003
         strategy: jobrunr
-        type: cleanup
+        handler: cleanup
         cron: "0 * * * * *"
         enabled: true
         meta:
@@ -39,19 +39,19 @@ r3edge:
 
       - id: task-003bis
         strategy: default
-        type: cleanup
+        handler: cleanup
         cron: "0 * * * * *"
         enabled: true
         meta:
           data: "Hello from default cron task"
                     
       - id: invalid-task-no-handler
-        type: dummy-invalid
+        handler: dummy-invalid
         enabled: true
         meta: {}
 
       - id: valid-task
-        type: mock-task
+        handler: mock-task
         enabled: true
         meta:
           key: value

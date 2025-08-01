@@ -8,34 +8,39 @@ logging:
 
 r3edge:
   tasks:
-    strategy: jobrunr
+    skip-late-tasks: true
     definitions:
       - id: task-001
-        type: print
+        strategy: jobrunr
+        handler: print
         enabled: true
         meta:
           message: "Hello from test"
 
       - id: task-002
-        type: print
+        strategy: jobrunr
+        handler: print
         enabled: false
         meta:
           message: "This should not be printed"
 
       - id: task-003
-        type: cleanup
+        strategy: jobrunr
+        handler: cleanup
         cron: "0 * * * * *"
         enabled: true
         meta:
           data: "some data"
           
       - id: invalid-task-no-handler
-        type: dummy-invalid
+        strategy: jobrunr
+        handler: dummy-invalid
         enabled: true
         meta: {}
 
       - id: valid-task
-        type: mock-task
+        strategy: jobrunr
+        handler: mock-task
         enabled: true
         meta:
           key: value

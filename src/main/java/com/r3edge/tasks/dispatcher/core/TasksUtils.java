@@ -17,7 +17,7 @@ public class TasksUtils {
 	 * @param task la tâche à déplanifier.
 	 * @return UUID id unique de la tâche
 	 */
-	public static UUID getJobId(Task task) {
+	public static UUID getJobId(TaskDescriptor task) {
 		return getJobId(task.getId());
 	}
 

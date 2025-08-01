@@ -4,35 +4,35 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.jobrunr.scheduling.BackgroundJobRequest;
+import org.jobrunr.scheduling.JobRequestScheduler;
 
-import com.r3edge.tasks.dispatcher.core.ITaskScheduler;
-import com.r3edge.tasks.dispatcher.core.Task;
-import com.r3edge.tasks.dispatcher.core.TaskHandler;
+import com.r3edge.tasks.dispatcher.core.IScheduledExecutor;
+import com.r3edge.tasks.dispatcher.core.TaskDescriptor;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Implémentation de {@link ITaskScheduler} utilisant JobRunr pour la
+ * Implémentation de {@link IScheduledExecutor} utilisant JobRunr pour la
  * planification des tâches récurrentes.
  */
 @RequiredArgsConstructor
 @Slf4j
-public class JobRunrTaskScheduler implements ITaskScheduler {
+public class JobRunrScheduledExecutor implements IScheduledExecutor {
 
 	private final Set<String> scheduledTaskIds = ConcurrentHashMap.newKeySet();
+	private final JobRequestScheduler jobRequestScheduler;
 
 	@Override
-	public void schedule(Task task, TaskHandler handler) {
+	public void schedule(TaskDescriptor task) {
 		String cron = task.getCron();
 		if (cron != null && !cron.isBlank()) {
-			BackgroundJobRequest.scheduleRecurrently(task.getId(), cron, new TaskJobRequest(task, handler.getClass().getName()));
+			jobRequestScheduler.scheduleRecurrently(task.getId(), cron, new TaskJobRequest(task));
 			scheduledTaskIds.add(task.getId());
 			log.info("✅ JobRunr CRON job enregistré: id={}, cron={}", task.getId(), cron);
 		} else {
-			log.warn("⏭️ Tâche ignorée dans JobRunrTaskScheduler (pas de cron défini) : {}", task.getId());
+			log.warn("⏭️ Tâche ignorée dans JobRunrScheduledExecutor (pas de cron défini) : {}", task.getId());
 		}
 	}
 
@@ -43,12 +43,13 @@ public class JobRunrTaskScheduler implements ITaskScheduler {
 
 	@Override
 	public void unscheduleById(String taskId) {
-		BackgroundJobRequest.deleteRecurringJob(taskId);
+		jobRequestScheduler.deleteRecurringJob(taskId);
+		//BackgroundJobRequest.deleteRecurringJob(taskId);
 		scheduledTaskIds.remove(taskId);
 	}
 
 	@Override
-	public void unschedule(Task task) {
+	public void unschedule(TaskDescriptor task) {
 		unscheduleById(task.getId());
 	}
 
@@ -59,7 +60,7 @@ public class JobRunrTaskScheduler implements ITaskScheduler {
 
 	@PostConstruct
 	private void logActivation() {
-		log.debug("✅ Bean JobRunrTaskScheduler initialisé");
+		log.debug("✅ Bean JobRunrScheduledExecutor initialisé");
 	}
 
 }

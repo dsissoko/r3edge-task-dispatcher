@@ -1,7 +1,15 @@
 # r3edge-task-dispatcher | ![Logo](logo_ds.png)
 
-Une librairie Spring Boot de confort permettant de définir des tâches dans un fichier YAML  
-et les associer à des handlers typés exécutés automatiquement au démarrage.
+**Librairie Java pour exécuter des tâches déclaratives et dynamiques dans vos microservices Spring Boot.**
+
+> 🚀 Pourquoi adopter `r3edge-task-dispatcher` ?
+>
+> ✅ Définissez vos tâches en YAML ou via Spring Config Server  
+> ✅ Exécutez-les immédiatement ou à un instant précis (`at`)  
+> ✅ Fire-and-forget natif, sans cron ni batch  
+> ✅ 100 % compatible Spring Boot 3  
+> ✅ Intégration ultra simple : une dépendance à ajouter, un handler à implémenter  
+> ✅ Stratégies configurables : `inmemory`, `jobrunr`, `hazelcast`
 
 This project is documented in French 🇫🇷 by default.  
 An auto-translated English version is available here:
@@ -10,266 +18,200 @@ An auto-translated English version is available here:
 
 ---
 
-## ✅ Fonctionnalités
+## 📋 Fonctionnalités clés
 
-- 🧾 Définition déclarative des tâches dans application.yml
-- 🔁 Exécution automatique au démarrage de l’application
-- Planification automatique au démarrage (si cron)
-- implémentation par défaut ou jobrunr possible (si dans votre classpath)
-- Refresh automatique des données de configuration des tâches (si busrefresh avec config server mis en place)
-
----
-
-## 🔧 Exemple de configuration YAML
-
-
-```yaml
-r3edge:
-  tasks:
-    definitions:
-      - id: handler1
-        type: cleanup
-        enabled: true
-        cron: "0 * * * * *"
-        meta:
-          target: "bar"
-          dataset: "1,3,40"
-      - id: handler2
-        type: init
-        enabled: true
-        meta:
-          target: "foo"
-          other: "nice data"
-```
-
-| Champ        | Obligatoire | Description                                              |
-|--------------|-------------|----------------------------------------------------------|
-| id         | ✅           | Identifiant unique de la tâche                          |
-| type       | ✅           | Type logique lié à un handler                           |
-| enabled    | ❌           | Exécution explicite au démarrage (true par défaut)      |
-| cron    | ❌           | Motif cron      |
-| meta    | ❌           | liste de parametre spécifiques à la tâche      |
+- ✅ Définition déclarative des tâches dans `application.yml`
+- ✅ Prise en charge automatique au démarrage de l’application
+- ✅ Support des tâches Fire & Forget avec lancement différé (`at`)
+- ✅ Support des tâches planifiées avec motif cron
+- ✅ Implémentation par défaut in-memory ou `jobrunr` (et prochainement `hazelcast`)
+- ✅ Autoconfiguration avec fallback systématique vers in-memory
+- ✅ Support du refresh automatique des données de configuration des tâches (Config Server + Spring Cloud Bus)
 
 ---
 
-## 🧩 Handlers
+## ⚙️ Intégration rapide
 
-Chaque type logique est lié à un bean Spring qui implémente TaskHandler.
+### Ajouter les dépendances nécessaires:
 
-```java
-@Component
-@Slf4j
-public class Handler1 implements TaskHandler {
-
-    @Override
-    public String getType() {
-        return "cleanup";
-    }
-
-    @Override
-    public void handle(Task task) {
-        log.info("Exécution Handler1");
-    }
-}
-```
-
-Au démarrage, le handler est exécuté ou planifié automatiquement pour chaque tâche activé (enabled = true).
-
-> ⚠️ En environnement distribué (multi-instance), la librairie n’applique aucun verrouillage.  
-> À vous de gérer la synchronisation des exécutions dans vos `TaskHandler` avec l'outil de votre choix (ex. [ShedLock](https://github.com/lukas-krecan/ShedLock) ou [Mini Lock](https://github.com/dsissoko/r3edge-mini-lock)).
-
-
----
-
-## 📦 Compatibilité
-
-✅ Testée avec :  
-- **Spring Boot** `3.5.3`  
-- **Spring Cloud** `2025.0.0`  
-- **Java** `17` et `21`
-
-🧘 Lib légère, sans dépendance transitive aux starters : fonctionne avec toute stack Spring moderne.  
-Pas de `fat-jar`, pas de verrouillage.
-
----
-
-## 🚀 Intégration
-
-Cette librairie est publiée sur **GitHub Packages**. Même en open source, **GitHub impose une authentification** pour accéder aux dépendances Maven.  
-Voici comment l'intégrer dans votre projet Gradle (local ou CI/CD).
-
----
-
-### 1. Déclarer le dépôt (les packages github publiques doivent être téléchargés avec des credentials : utilisez les votres)
+Cette librairie est publiée sur **GitHub Packages**: Même en open source, **GitHub impose une authentification** pour accéder aux dépendances Maven.  
+Voici comment l'intégrer dans votre projet Gradle.
 
 ```groovy
 repositories {
     mavenCentral()
+    // Dépôt GitHub Packages de r3edge-cloud-registry
     maven {
-        url = uri("https://maven.pkg.github.com/dsissoko/r3edge-task-dispatcher")
+        url = uri("https://maven.pkg.github.com/dsissoko/r3edge-cloud-registry")
         credentials {
             username = ghUser
             password = ghKey
         }
     }
-}
-```
-
----
-
-### 2. Ajoutez la dépendance
-
-```groovy
-ext {
-    set('springCloudVersion', "2025.0.0")
+    mavenLocal()
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-
-dependencies { 
-    ...  
-    // version actuelle 0.2.0
-    implementation "com.r3edge:r3edge-task-dispatcher:0.2.0"
-    // spring boot nécessaire
+dependencies {
+    ...
+    
+    implementation "com.r3edge:r3edge-task-dispatcher:0.2.2"
     implementation 'org.springframework.boot:spring-boot-starter-web'
     
     // Les dépendances suivante sont optionnelles mais nécessaires pour bénéficier de l'implémentation jobrunr
     // Pour bénéficier de la configuration automatique d'une datasource pour jobrunr
+    runtimeOnly 'com.h2database:h2'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    // Pour bénéficier de l'implémantion jobrunr
     implementation 'org.jobrunr:jobrunr-spring-boot-3-starter:8.0.1'
+    
+    ...
 }
-
 ```
 
-### 3. Créer vos tâches en implémentant TaskHandler:
+### Déclarez vos tâches dans la configuration yaml de votre microservice Spring boot:
+
+```yaml
+jobrunr:
+  enabled: true                                       # Active JobRunr dans l'application
+  jobs:
+    default-number-of-retries: 0  
+  background-job-server:
+    poll-interval-in-seconds: 5                       # Intervalle de polling pour les jobs en arrière-plan (1 seconde)
+    enabled: true                                     # Lance le serveur pour exécuter les jobs en arrière-plan
+  dashboard:
+    enabled: true                                     # Active le dashboard web (par défaut sur http://localhost:8000)
+    port: 8101
+    servlet-path: /tasks-dashboard
+r3edge:
+  tasks:
+    skip-late-tasks: false                            # si True alors les tâches dont le parametre At est dépassé ne sont pas exécutés
+    definitions:
+      - id: testJobRunrFireAndForgetDatacollectOK     # id unique   
+        strategy: jobrunr                             # inmemory, jobrunr, hazelcast
+        handler: jobrunrOK                            # nom du handler de tâche à exécuter
+        enabled: true                                 # si false, alors la tâche ne sera pas exécutée, true par défaut
+        #at: 2025-07-31T16:03:00Z                     # ou 2025-07-31T16:03:00+02:00 Pour une tâche Fire and Forget mais différé au moment spécifié (format  ISO 8601)
+        #cron: "0,30 * * * * *"                       # Exécute toutes les 30 secondes: le motif cron (format cron expression 6 champs) permet une planification de la tâche
+        meta:                                         # Map(<String, String>) à utiliser pour les paramètres du handler
+          message: "fire and forget OK sous JobRunr"
+          market: Kucoin
+          pair: BTC
+          timeframe: 1mn
+          
+```
+
+> (cron et at ne sont pas à déclarer sur la même tâche)
+
+
+### Implémenter le Handler:
 
 ```java
 package com.example.demo;
 
-import org.springframework.stereotype.Component;
+import java.util.Map;
 
-import com.r3edge.tasks.dispatcher.core.Task;
+import org.jobrunr.jobs.context.JobRunrDashboardLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.r3edge.tasks.dispatcher.core.TaskDescriptor;
 import com.r3edge.tasks.dispatcher.core.TaskHandler;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
-@Component
-@Slf4j
-public class Handler1 implements TaskHandler {
+@Service
+@RequiredArgsConstructor
+public class JobRunrDataCollectHandler implements TaskHandler {
 
     @Override
-    public String getType() {
-        return "cleanup";
+    public String getName() {
+        return "jobrunrOK";
     }
 
     @Override
-    public void handle(Task task) {
-        log.info("Lancement Handler1");
+    public void execute(TaskDescriptor task) {
+        Map<String, String> meta = task.getMeta();
+        // Au choix : un logger agnostique
+        //Logger log = LoggerFactory.getLogger(this.getClass());
+        // ou un logger adpaté à la srategy mais qui rend le handler dépendant de l'infra choisie
+        Logger log = new JobRunrDashboardLogger(LoggerFactory.getLogger(this.getClass()));      
+        String msg = (meta == null)
+                ? "(no meta)"
+                : (meta.get("message") != null && !meta.get("message").isEmpty()
+                    ? meta.get("message")
+                    : "(no message)");
+        log.info("Start...");
+        log.info("Exécution JobRunrDataCollectHandler");
+        log.info("Done msg={}", msg);
     }
-
-}      
+}
 ```
 
-### 4. Déclarez vos tâches dans le fichier application.yml
+> ⚠️ En environnement distribué (multi-instance), la version in memory ne gère pas de verrouillage.  
+> À vous de gérer la synchronisation des exécutions dans vos `TaskHandler` avec l'outil de votre choix (ex. [ShedLock](https://github.com/lukas-krecan/ShedLock) ou [Mini Lock](https://github.com/dsissoko/r3edge-mini-lock)).
 
-```yaml
-r3edge:
-  tasks:
-    skip-late-tasks: true # si True alors les tâches dont le parametre At est dépassé ne sont pas exécutés
-    definitions:
-      - id: testDefaultFireAndForgetDatacollect
-        strategy: default
-        type: datacollect
-        enabled: true
-        meta:
-          message: "KucoinBTC1mn"
-          market: "Kucoin"
-          pair: "BTC"
-          timeframe: "1mn"
-      - id: testJobRunrFireAndForgetDatacollect
-        strategy: jobrunr
-        type: datacollect
-        enabled: true
-        meta:
-          message: "KucoinBTC1mn"
-          market: "Kucoin"
-          pair: "BTC"
-          timeframe: "1mn"
-      - id: testDefaultFireAndForgetAtDatacollect
-        strategy: default
-        type: datacollect
-        enabled: true
-        at: "2025-07-31T15:32:00Z" # ou "2025-07-31T17:32:00+02:00": Format ISO-8601 UTC
-        meta:
-          message: "KucoinBTC1mn"
-          market: "Kucoin"
-          pair: "BTC"
-          timeframe: "1mn"
-      - id: testJobRunrFireAndForgetAtDatacollect
-        strategy: jobrunr
-        type: datacollect
-        enabled: true
-        at: "2025-07-31T15:32:00Z" # ou "2025-07-31T17:32:00+02:00": Format ISO-8601 UTC
-        meta:
-          message: "KucoinBTC1mn"
-          market: "Kucoin"
-          pair: "BTC"
-          timeframe: "1mn"
-      - id: testDefaultScheduleDatacollect
-        strategy: default
-        type: datacollect
-        enabled: true
-        cron: "0 * * * * *"  # Exécute toutes les minutes
-        meta:
-          message: "KucoinBTC1mn"
-          market: "Kucoin"
-          pair: "BTC"
-          timeframe: "1mn"
-      - id: testJobRunrScheduleDatacollect
-        strategy: jobrunr
-        type: datacollect
-        enabled: true
-        cron: "0 * * * * *"  # Exécute toutes les minutes
-        meta:
-          message: "KucoinBTC1mn"
-          market: "Kucoin"
-          pair: "BTC"
-          timeframe: "1mn"
+### Lancer le microservice:
+
 ```
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
 
----
+[32m :: Spring Boot :: [39m              [2m (v3.5.4)[0;39m
 
-### 🔐 5. Lancez votre service
+[2m2025-08-01T23:31:01.714+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mcom.example.demo.Demo3Application       [0;39m [2m:[0;39m Starting Demo3Application using Java 23.0.1 with PID 19796 (C:\Users\david\Documents\projets\r3edge\sts_ws2\demo-3\bin\main started by david in C:\Users\david\Documents\projets\r3edge\sts_ws2\demo-3)
+[2m2025-08-01T23:31:01.719+02:00[0;39m [32mDEBUG[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mcom.example.demo.Demo3Application       [0;39m [2m:[0;39m Running with Spring Boot v3.5.4, Spring v6.2.9
+[2m2025-08-01T23:31:01.722+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mcom.example.demo.Demo3Application       [0;39m [2m:[0;39m No active profile set, falling back to 1 default profile: "default"
+[2m2025-08-01T23:31:04.688+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mcom.example.demo.DemoConfig             [0;39m [2m:[0;39m Configuration terminée
+[2m2025-08-01T23:31:04.743+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.core.TaskHandlerRegistry        [0;39m [2m:[0;39m Handler enregistré : inMemoryOK
+[2m2025-08-01T23:31:04.745+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.core.TaskHandlerRegistry        [0;39m [2m:[0;39m Handler enregistré : inMemoryKO
+[2m2025-08-01T23:31:04.746+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.core.TaskHandlerRegistry        [0;39m [2m:[0;39m Handler enregistré : jobrunrOK
+[2m2025-08-01T23:31:04.746+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.core.TaskHandlerRegistry        [0;39m [2m:[0;39m Handler enregistré : jobrunrKO
+[2m2025-08-01T23:31:04.749+02:00[0;39m [32mDEBUG[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.c.InMemoryFireAndForgetExecutor [0;39m [2m:[0;39m ✅ Bean InMemoryExecutorConfig initialisé
+[2m2025-08-01T23:31:04.756+02:00[0;39m [32mDEBUG[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.i.j.JobRunrFireAndForgetExecutor[0;39m [2m:[0;39m ✅ Bean JobRunrFireAndForgetExecutor initialisé
+[2m2025-08-01T23:31:04.763+02:00[0;39m [32mDEBUG[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.core.InMemoryScheduledExecutor  [0;39m [2m:[0;39m ✅ Bean InMemoryScheduledExecutor initialisé
+[2m2025-08-01T23:31:04.766+02:00[0;39m [32mDEBUG[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.i.j.JobRunrScheduledExecutor    [0;39m [2m:[0;39m ✅ Bean JobRunrScheduledExecutor initialisé
+[2m2025-08-01T23:31:05.491+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m 🔄 Démarrage du service de dispatch.
+[2m2025-08-01T23:31:05.523+02:00[0;39m [32mDEBUG[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.core.TaskDescriptorsProperties  [0;39m [2m:[0;39m Tasks configuration chargée avec 9 tasks
+[2m2025-08-01T23:31:05.747+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.i.j.JobRunrFireAndForgetExecutor[0;39m [2m:[0;39m ✅ Tâche testJobRunrFireAndForgetDatacollectOK mise en file JobRunr (Fire & Forget)
+[2m2025-08-01T23:31:05.748+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testJobRunrFireAndForgetAtDatacollectOK est désactivée, elle ne sera pas exécutée.
+[2m2025-08-01T23:31:05.748+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testJobRunrScheduleDatacollectOK est désactivée, elle ne sera pas exécutée.
+[2m2025-08-01T23:31:05.748+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testInMemoryFireAndForgetDatacollectOK est désactivée, elle ne sera pas exécutée.
+[2m2025-08-01T23:31:05.748+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testInMemoryFireAndForgetAtDatacollectOK est désactivée, elle ne sera pas exécutée.
+[2m2025-08-01T23:31:05.748+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testInMemoryScheduleDatacollectOK est désactivée, elle ne sera pas exécutée.
+[2m2025-08-01T23:31:05.750+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testJobRunrFireAndForgetDatacollectKO est désactivée, elle ne sera pas exécutée.
+[2m2025-08-01T23:31:05.751+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testJobRunrFireAndForgetAtDatacollectKO est désactivée, elle ne sera pas exécutée.
+[2m2025-08-01T23:31:05.753+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testJobRunrScheduleDatacollectKO est désactivée, elle ne sera pas exécutée.
+[2m2025-08-01T23:31:05.782+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mcom.example.demo.Demo3Application       [0;39m [2m:[0;39m Started Demo3Application in 5.268 seconds (process running for 6.592)
+[2m2025-08-01T23:31:11.500+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [roundjob-worker] [0;39m[36mc.e.demo.JobRunrDataCollectHandler      [0;39m [2m:[0;39m Start...
+[2m2025-08-01T23:31:11.502+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [roundjob-worker] [0;39m[36mc.e.demo.JobRunrDataCollectHandler      [0;39m [2m:[0;39m Exécution JobRunrDataCollectHandler
+[2m2025-08-01T23:31:11.502+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [roundjob-worker] [0;39m[36mc.e.demo.JobRunrDataCollectHandler      [0;39m [2m:[0;39m Done msg=fire and forget OK sous JobRunr
+```
 
  - Au démarrage vos tâches sont prises en charge directement (exécution ou planification)
  - Au refresh (si cloudbus et config server correctement configurés), les tâches sont rechargées.
  
-### ⚙️ Comportement au redémarrage ou après refresh de configuration
+#### ⚙️ Comportement au redémarrage ou après refresh de configuration
 
-#### 🟢 Tâche avec `cron` :
+##### 🟢 Tâche avec `cron` :
 
 | Implémentation | Comportement au redémarrage           | Comportement au refresh            |
 |----------------|----------------------------------------|------------------------------------|
 | `Default`      | ✔ Replanifiée                         | ✔ Replanifiée                     |
 | `JobRunr`      | ✔ Non dupliquée (persistée)           | ✔ Non dupliquée (persistée)       |
 
-- Si `enabled: false`, alors les tâches ne sont pas prises en compte.
-- Pour une tâche de type cron, le champ `redispatchedOnRefresh` est systématiquement **ignoré**.
-
-#### 🔵 Tâche ponctuelle (sans `cron`) :
+##### 🔵 Tâche Fire & Forget (sans `cron`) :
 
 | Implémentation | Comportement au redémarrage                            | Comportement au refresh                       |
 |----------------|--------------------------------------------------------|-----------------------------------------------|
 | `Default`      | ✔ Relancée                                             | ✔ Relancée si `redispatchedOnRefresh: true`  |
 | `JobRunr`      | ✘ Non relancée si déjà exécutée (persistée)           | ✔ Relancée si `redispatchedOnRefresh: true`  |
 
-- Si `enabled: false`, alors les tâches ne sont pas prises en compte.
-
-#### 🗑️ Tâche supprimée du YAML :
+##### 🗑️ Tâche supprimée du YAML :
 
 - Toute tâche précédemment dispatchée mais absente de la nouvelle config est **automatiquement annulée**.
 
@@ -280,11 +222,29 @@ r3edge:
 
 ---
 
-### 📚 Référence officielle
+## 📦 Stack de référence
 
-> 📖 [Authenticating to GitHub Packages](https://docs.github.com/en/packages/learn-github-packages/working-with-a-github-packages-registry#authenticating-to-github-packages)
+✅ Cette librairie a été conçue et testée avec les versions suivantes :
 
+- Java 17+
+- Spring Boot 3.x
+- JobRunr 6.x
+- Hazelcast 5.x *(en option, support à venir)*
+- Spring Cloud Config Server *(pour le support du rafraîchissement dynamique, optionnel)*
+- Spring Cloud Bus *(si vous souhaitez synchroniser les mises à jour de configuration)*
 
 ---
+
+## 🗺️ Roadmap
+
+### 🔧 À venir
+- Intégration Hazelcast comme stratégie distribuée
+
+### 🧠 En réflexion
+- Support Annotation @Job de JobRunr
+
+---
+
+📫 Maintenu par [@dsissoko](https://github.com/dsissoko) – contributions bienvenues.
 
 [![Build and Test - r3edge-task-dispatcher](https://github.com/dsissoko/r3edge-task-dispatcher/actions/workflows/cicd_code.yml/badge.svg)](https://github.com/dsissoko/r3edge-task-dispatcher/actions/workflows/cicd_code.yml)

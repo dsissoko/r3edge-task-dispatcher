@@ -21,7 +21,7 @@ class JobRunrTaskConfig {
     org.springframework.core.env.Environment env;
 
     @Test
-    void shouldHaveCorrectStrategy() {
-        assertThat(env.getProperty("r3edge.tasks.strategy")).isEqualTo("jobrunr");
+    void shouldHaveSkipLateTrue() {
+        assertThat(env.getProperty("r3edge.tasks.skip-late-tasks")).asBoolean().isTrue();
     }
 }

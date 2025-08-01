@@ -1,7 +1,6 @@
 package com.r3edge.tasks.dispatcher.impl.jobrunr;
 
 import org.jobrunr.jobs.lambdas.JobRequestHandler;
-import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
 import com.r3edge.tasks.dispatcher.core.TaskInvokerService;
@@ -18,9 +17,8 @@ public class TaskJobRequestHandler implements JobRequestHandler<TaskJobRequest> 
     private final TaskInvokerService invoker;
 
     @Override
-    public void run(TaskJobRequest request) throws Exception {
-    	Logger logger = request.getLogger();
-    	invoker.execute(request.getTask(), logger);
+    public void run(TaskJobRequest request) {
+    	invoker.execute(request.getTask());
     }
 }
 
