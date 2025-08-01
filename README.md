@@ -3,12 +3,12 @@
 **Librairie Java pour exécuter des tâches déclaratives et dynamiques dans vos microservices Spring Boot.**
 
 > 🚀 Pourquoi adopter `r3edge-task-dispatcher` ?
-
-> ✅ 1 API triviale: Définissez vos tâches en YAML, Implémentez TaskHandler et c'est fini
-> ✅ Support de tous les types de tâches: cron, fire and forget avec option AT
-> ✅ Hot reload des parametres des tâches et activation/désactivation
-> ✅ 100 % compatible Spring Boot 3.x
-> ✅ Stratégies configurables : `inmemory`, `jobrunr`, `hazelcast`
+>
+> ✅ 1 **API triviale** : Définissez vos tâches en YAML, Implémentez TaskHandler et c'est fini  
+> ✅ Support de tous les types de tâches: cron, fire and forget avec option AT  
+> ✅ Hot reload des parametres des tâches et activation/désactivation  
+> ✅ 100 % compatible **Spring Boot 3.x**  
+> ✅ Stratégies configurables : `inmemory`, `jobrunr`, `hazelcast`  
 
 This project is documented in French 🇫🇷 by default.  
 An auto-translated English version is available here:
