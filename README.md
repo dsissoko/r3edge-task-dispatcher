@@ -153,7 +153,7 @@ public class JobRunrDataCollectHandler implements TaskHandler {
 
 ### Lancer le microservice:
 
-```
+```text
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
 ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
