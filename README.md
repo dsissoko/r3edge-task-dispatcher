@@ -4,11 +4,10 @@
 
 > 🚀 Pourquoi adopter `r3edge-task-dispatcher` ?
 >
-> ✅ Définissez vos tâches en YAML ou via Spring Config Server  
-> ✅ Exécutez-les immédiatement ou à un instant précis (`at`)  
-> ✅ Fire-and-forget natif, sans cron ni batch  
-> ✅ 100 % compatible Spring Boot 3  
-> ✅ Intégration ultra simple : une dépendance à ajouter, un handler à implémenter  
+> ✅ 1 API triviale: Définissez vos tâches en YAML, Implémentez TaskHandler et c'est fini.
+> ✅ Support de tous les types de tâches: cron, fire and forget avec option AT
+> ✅ Hot reload des parametres des tâches et activation/désactivation
+> ✅ 100 % compatible Spring Boot 3.x
 > ✅ Stratégies configurables : `inmemory`, `jobrunr`, `hazelcast`
 
 This project is documented in French 🇫🇷 by default.  
@@ -214,7 +213,7 @@ public class JobRunrDataCollectHandler implements TaskHandler {
 
 ## 📦 Stack de référence
 
-✅ Cette librairie a été conçue et testée avec les versions suivantes :
+✅ Cette librairie a été conçue et testée avec :
 
 - Java 17+
 - Spring Boot 3.x
