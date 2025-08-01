@@ -153,6 +153,8 @@ public class JobRunrDataCollectHandler implements TaskHandler {
 
 ### Lancer le microservice:
 
+
+
 ```text
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -161,35 +163,23 @@ public class JobRunrDataCollectHandler implements TaskHandler {
   '  |____| .__|_| |_|_| |_\__, | / / / /
  =========|_|==============|___/=/_/_/_/
 
-[32m :: Spring Boot :: [39m              [2m (v3.5.4)[0;39m
+:: Spring Boot ::               (v3.5.4)
 
-[2m2025-08-01T23:31:01.714+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mcom.example.demo.Demo3Application       [0;39m [2m:[0;39m Starting Demo3Application using Java 23.0.1 with PID 19796 (C:\Users\david\Documents\projets\r3edge\sts_ws2\demo-3\bin\main started by david in C:\Users\david\Documents\projets\r3edge\sts_ws2\demo-3)
-[2m2025-08-01T23:31:01.719+02:00[0;39m [32mDEBUG[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mcom.example.demo.Demo3Application       [0;39m [2m:[0;39m Running with Spring Boot v3.5.4, Spring v6.2.9
-[2m2025-08-01T23:31:01.722+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mcom.example.demo.Demo3Application       [0;39m [2m:[0;39m No active profile set, falling back to 1 default profile: "default"
-[2m2025-08-01T23:31:04.688+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mcom.example.demo.DemoConfig             [0;39m [2m:[0;39m Configuration terminée
-[2m2025-08-01T23:31:04.743+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.core.TaskHandlerRegistry        [0;39m [2m:[0;39m Handler enregistré : inMemoryOK
-[2m2025-08-01T23:31:04.745+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.core.TaskHandlerRegistry        [0;39m [2m:[0;39m Handler enregistré : inMemoryKO
-[2m2025-08-01T23:31:04.746+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.core.TaskHandlerRegistry        [0;39m [2m:[0;39m Handler enregistré : jobrunrOK
-[2m2025-08-01T23:31:04.746+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.core.TaskHandlerRegistry        [0;39m [2m:[0;39m Handler enregistré : jobrunrKO
-[2m2025-08-01T23:31:04.749+02:00[0;39m [32mDEBUG[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.c.InMemoryFireAndForgetExecutor [0;39m [2m:[0;39m ✅ Bean InMemoryExecutorConfig initialisé
-[2m2025-08-01T23:31:04.756+02:00[0;39m [32mDEBUG[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.i.j.JobRunrFireAndForgetExecutor[0;39m [2m:[0;39m ✅ Bean JobRunrFireAndForgetExecutor initialisé
-[2m2025-08-01T23:31:04.763+02:00[0;39m [32mDEBUG[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.core.InMemoryScheduledExecutor  [0;39m [2m:[0;39m ✅ Bean InMemoryScheduledExecutor initialisé
-[2m2025-08-01T23:31:04.766+02:00[0;39m [32mDEBUG[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.i.j.JobRunrScheduledExecutor    [0;39m [2m:[0;39m ✅ Bean JobRunrScheduledExecutor initialisé
-[2m2025-08-01T23:31:05.491+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m 🔄 Démarrage du service de dispatch.
-[2m2025-08-01T23:31:05.523+02:00[0;39m [32mDEBUG[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.core.TaskDescriptorsProperties  [0;39m [2m:[0;39m Tasks configuration chargée avec 9 tasks
-[2m2025-08-01T23:31:05.747+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.d.i.j.JobRunrFireAndForgetExecutor[0;39m [2m:[0;39m ✅ Tâche testJobRunrFireAndForgetDatacollectOK mise en file JobRunr (Fire & Forget)
-[2m2025-08-01T23:31:05.748+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testJobRunrFireAndForgetAtDatacollectOK est désactivée, elle ne sera pas exécutée.
-[2m2025-08-01T23:31:05.748+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testJobRunrScheduleDatacollectOK est désactivée, elle ne sera pas exécutée.
-[2m2025-08-01T23:31:05.748+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testInMemoryFireAndForgetDatacollectOK est désactivée, elle ne sera pas exécutée.
-[2m2025-08-01T23:31:05.748+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testInMemoryFireAndForgetAtDatacollectOK est désactivée, elle ne sera pas exécutée.
-[2m2025-08-01T23:31:05.748+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testInMemoryScheduleDatacollectOK est désactivée, elle ne sera pas exécutée.
-[2m2025-08-01T23:31:05.750+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testJobRunrFireAndForgetDatacollectKO est désactivée, elle ne sera pas exécutée.
-[2m2025-08-01T23:31:05.751+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testJobRunrFireAndForgetAtDatacollectKO est désactivée, elle ne sera pas exécutée.
-[2m2025-08-01T23:31:05.753+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mc.r.t.dispatcher.core.TaskDispatcher    [0;39m [2m:[0;39m La tâche testJobRunrScheduleDatacollectKO est désactivée, elle ne sera pas exécutée.
-[2m2025-08-01T23:31:05.782+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [  restartedMain] [0;39m[36mcom.example.demo.Demo3Application       [0;39m [2m:[0;39m Started Demo3Application in 5.268 seconds (process running for 6.592)
-[2m2025-08-01T23:31:11.500+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [roundjob-worker] [0;39m[36mc.e.demo.JobRunrDataCollectHandler      [0;39m [2m:[0;39m Start...
-[2m2025-08-01T23:31:11.502+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [roundjob-worker] [0;39m[36mc.e.demo.JobRunrDataCollectHandler      [0;39m [2m:[0;39m Exécution JobRunrDataCollectHandler
-[2m2025-08-01T23:31:11.502+02:00[0;39m [32m INFO[0;39m [35m19796[0;39m [2m--- [demo-jobrunr] [roundjob-worker] [0;39m[36mc.e.demo.JobRunrDataCollectHandler      [0;39m [2m:[0;39m Done msg=fire and forget OK sous JobRunr
+2025-08-01T23:31:01.714+02:00  INFO 19796 --- [demo-jobrunr] [restartedMain] com.example.demo.Demo3Application        : Starting Demo3Application
+2025-08-01T23:31:01.719+02:00 DEBUG 19796 --- [demo-jobrunr] [restartedMain] com.example.demo.Demo3Application        : Running with Spring Boot v3.5.4, Spring v6.2.9
+2025-08-01T23:31:01.722+02:00  INFO 19796 --- [demo-jobrunr] [restartedMain] com.example.demo.Demo3Application        : No active profile set, falling back to 1 default profile: "default"
+2025-08-01T23:31:04.688+02:00  INFO 19796 --- [demo-jobrunr] [restartedMain] com.example.demo.DemoConfig              : Configuration terminée
+2025-08-01T23:31:04.749+02:00 DEBUG 19796 --- [demo-jobrunr] [restartedMain] c.r.t.d.c.InMemoryFireAndForgetExecutor  : ✅ Bean InMemoryExecutorConfig initialisé
+2025-08-01T23:31:04.756+02:00 DEBUG 19796 --- [demo-jobrunr] [restartedMain] c.r.t.d.i.j.JobRunrFireAndForgetExecutor : ✅ Bean JobRunrFireAndForgetExecutor initialisé
+2025-08-01T23:31:04.763+02:00 DEBUG 19796 --- [demo-jobrunr] [restartedMain] c.r.t.d.core.InMemoryScheduledExecutor   : ✅ Bean InMemoryScheduledExecutor initialisé
+2025-08-01T23:31:04.766+02:00 DEBUG 19796 --- [demo-jobrunr] [restartedMain] c.r.t.d.i.j.JobRunrScheduledExecutor     : ✅ Bean JobRunrScheduledExecutor initialisé
+2025-08-01T23:31:05.491+02:00  INFO 19796 --- [demo-jobrunr] [restartedMain] c.r.t.dispatcher.core.TaskDispatcher     : 🔄 Démarrage du service de dispatch.
+2025-08-01T23:31:05.523+02:00 DEBUG 19796 --- [demo-jobrunr] [restartedMain] c.r.t.d.core.TaskDescriptorsProperties   : Tasks configuration chargée avec 9 tasks
+2025-08-01T23:31:05.747+02:00  INFO 19796 --- [demo-jobrunr] [restartedMain] c.r.t.d.i.j.JobRunrFireAndForgetExecutor : ✅ Tâche testJobRunrFireAndForgetDatacollectOK mise en file JobRunr (Fire & Forget)
+2025-08-01T23:31:05.782+02:00  INFO 19796 --- [demo-jobrunr] [restartedMain] com.example.demo.Demo3Application        : Started Demo3Application in 5.268 seconds (process running for 6.592)
+2025-08-01T23:31:11.500+02:00  INFO 19796 --- [demo-jobrunr] [roundjob-worker] c.e.demo.JobRunrDataCollectHandler       : Start...
+2025-08-01T23:31:11.502+02:00  INFO 19796 --- [demo-jobrunr] [roundjob-worker] c.e.demo.JobRunrDataCollectHandler       : Exécution JobRunrDataCollectHandler
+2025-08-01T23:31:11.502+02:00  INFO 19796 --- [demo-jobrunr] [roundjob-worker] c.e.demo.JobRunrDataCollectHandler       : Done msg=fire and forget OK sous JobRunr
 ```
 
  - Au démarrage vos tâches sont prises en charge directement (exécution ou planification)
