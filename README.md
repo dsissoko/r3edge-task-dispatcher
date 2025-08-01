@@ -21,11 +21,11 @@ An auto-translated English version is available here:
 
 - ✅ Définition déclarative des tâches dans `application.yml`
 - ✅ Prise en charge automatique au démarrage de l’application
-- ✅ Support des tâches Fire & Forget avec lancement différé (`at`)
-- ✅ Support des tâches planifiées avec motif cron
-- ✅ Implémentation par défaut in-memory ou `jobrunr` (et prochainement `hazelcast`)
-- ✅ Autoconfiguration avec fallback systématique vers in-memory
-- ✅ Support du refresh automatique des données de configuration des tâches (Config Server + Spring Cloud Bus)
+- ✅ Support des tâches **Fire & Forget** avec **lancement différé (`at`)**
+- ✅ Support des tâches planifiées avec **motif cron**
+- ✅ Implémentation par défaut **in-memory** ou **`jobrunr`** (et prochainement **`hazelcast`**)
+- ✅ **Autoconfiguration** avec fallback automatique vers in-memory
+- ✅ Support du **@RefreshScope** des données de configuration des tâches (Config Server + Spring Cloud Bus)
 
 ---
 
