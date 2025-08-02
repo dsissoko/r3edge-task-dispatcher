@@ -36,7 +36,7 @@ An auto-translated English version is available here:
 ```groovy
 repositories {
     mavenCentral()
-    // Dépôt GitHub Packages de r3edge-cloud-registry
+    // Dépôt GitHub Packages de r3edge-task-dispatcher
     maven {
         url = uri("https://maven.pkg.github.com/dsissoko/r3edge-task-dispatcher")
         credentials {
@@ -105,7 +105,7 @@ r3edge:
           
 ```
 
-> (cron et at ne sont pas à déclarer sur la même tâche)
+> ⚠️ cron et at ne sont pas à déclarer sur la même tâche
 
 
 ### Implémenter le Handler:
@@ -187,8 +187,8 @@ public class JobRunrDataCollectHandler implements TaskHandler {
 2025-08-01T23:31:11.502+02:00  INFO 19796 --- [demo-jobrunr] [roundjob-worker] c.e.demo.JobRunrDataCollectHandler       : Done msg=fire and forget OK sous JobRunr
 ```
 
-> ℹ️ Au démarrage vos tâches sont prises en charge directement (exécution ou planification)
-> ℹ️ Au refresh (si cloudbus et config server correctement configurés), les tâches sont rechargées mais non dupliquées.
+> ℹ️ Au démarrage vos tâches sont prises en charge directement (exécution ou planification)  
+> ℹ️ Au refresh (si cloudbus et config server correctement configurés), les tâches sont rechargées mais non dupliquées  
  
 #### ⚙️ Comportement au redémarrage ou après refresh de configuration
 
@@ -225,8 +225,7 @@ public class JobRunrDataCollectHandler implements TaskHandler {
 - Spring Boot 3.x
 - JobRunr 6.x
 - Hazelcast 5.x *(en option, support à venir)*
-- Spring Cloud Config Server *(pour le support du rafraîchissement dynamique, optionnel)*
-- Spring Cloud Bus *(si vous souhaitez synchroniser les mises à jour de configuration)*
+- Spring Cloud Config Server et Spring Cloud Bus *(pour le support du rafraîchissement dynamique, optionnel)*
 
 ---
 
