@@ -33,9 +33,6 @@ An auto-translated English version is available here:
 
 ### Ajouter les dépendances nécessaires:
 
-Cette librairie est publiée sur **GitHub Packages**: Même en open source, **GitHub impose une authentification** pour accéder aux dépendances Maven.  
-Voici comment l'intégrer dans votre projet Gradle.
-
 ```groovy
 repositories {
     mavenCentral()
@@ -65,6 +62,15 @@ dependencies {
     
     ...
 }
+```
+
+> ⚠️ Cette librairie est publiée sur **GitHub Packages**: Même en open source, **GitHub impose une authentification** pour accéder aux dépendances.  
+> Il faudra donc valoriser ghUser et ghKey dans votre gradle.properties:
+
+```properties
+#pour réccupérer des packages github 
+ghUser=your_github_user
+ghKey=github_token_with_read_package_scope
 ```
 
 ### Déclarez vos tâches dans la configuration yaml de votre microservice Spring boot:
@@ -181,8 +187,8 @@ public class JobRunrDataCollectHandler implements TaskHandler {
 2025-08-01T23:31:11.502+02:00  INFO 19796 --- [demo-jobrunr] [roundjob-worker] c.e.demo.JobRunrDataCollectHandler       : Done msg=fire and forget OK sous JobRunr
 ```
 
- - Au démarrage vos tâches sont prises en charge directement (exécution ou planification)
- - Au refresh (si cloudbus et config server correctement configurés), les tâches sont rechargées.
+> ℹ️ Au démarrage vos tâches sont prises en charge directement (exécution ou planification)
+> ℹ️ Au refresh (si cloudbus et config server correctement configurés), les tâches sont rechargées mais non dupliquées.
  
 #### ⚙️ Comportement au redémarrage ou après refresh de configuration
 
@@ -231,6 +237,7 @@ public class JobRunrDataCollectHandler implements TaskHandler {
 
 ### 🧠 En réflexion
 - Support Annotation @Job de JobRunr
+- Configuration du scheduler et de L'executor InMemory par injection de spring beans
 
 ---
 
