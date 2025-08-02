@@ -38,7 +38,7 @@ repositories {
     mavenCentral()
     // Dépôt GitHub Packages de r3edge-cloud-registry
     maven {
-        url = uri("https://maven.pkg.github.com/dsissoko/r3edge-cloud-registry")
+        url = uri("https://maven.pkg.github.com/dsissoko/r3edge-task-dispatcher")
         credentials {
             username = ghUser
             password = ghKey
