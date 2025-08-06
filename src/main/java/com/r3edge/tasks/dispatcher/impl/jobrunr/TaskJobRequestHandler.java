@@ -18,7 +18,7 @@ public class TaskJobRequestHandler implements JobRequestHandler<TaskJobRequest> 
 
     @Override
     public void run(TaskJobRequest request) {
-    	invoker.execute(request.getTask());
+    	invoker.execute(request.getTaskDescriptor());
     }
 }
 

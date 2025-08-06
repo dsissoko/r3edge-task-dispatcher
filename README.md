@@ -8,7 +8,7 @@
 > ✅ Support de tous les types de tâches: **cron, fire and forget avec option AT**  
 > ✅ **Hot reload** des parametres des tâches et activation/désactivation  
 > ✅ 100 % compatible **Spring Boot 3.x**  
-> ✅ Stratégies configurables : **`inmemory`, `jobrunr`, `hazelcast`**  
+> ✅ Stratégies configurables : **`default`, `jobrunr`, `hazelcast`**  
 
 This project is documented in French 🇫🇷 by default.  
 An auto-translated English version is available here:
@@ -92,7 +92,7 @@ r3edge:
     skip-late-tasks: false                            # si True alors les tâches dont le parametre At est dépassé ne sont pas exécutés
     definitions:
       - id: testJobRunrFireAndForgetDatacollectOK     # id unique   
-        strategy: jobrunr                             # inmemory, jobrunr, hazelcast
+        strategy: jobrunr                             # default, jobrunr, hazelcast
         handler: jobrunrOK                            # nom du handler de tâche à exécuter
         enabled: true                                 # si false, alors la tâche ne sera pas exécutée, true par défaut
         #at: 2025-07-31T16:03:00Z                     # ou 2025-07-31T16:03:00+02:00 Pour une tâche Fire and Forget mais différé au moment spécifié (format  ISO 8601)

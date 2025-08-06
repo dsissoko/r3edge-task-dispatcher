@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'com.r3edge'
-version = '0.2.2'
+version = '0.2.2-SNAPSHOT'
 
 base {
     archivesName = 'r3edge-task-dispatcher'
@@ -68,6 +68,9 @@ dependencies {
     compileOnly 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
     // Gestion des tâches
     compileOnly 'org.jobrunr:jobrunr-spring-boot-3-starter:8.0.1'
+    // Tâches distribuées
+    compileOnly 'com.hazelcast:hazelcast-spring:5.4.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.mockito:mockito-junit-jupiter'
@@ -83,8 +86,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     testImplementation 'org.jobrunr:jobrunr-spring-boot-3-starter:8.0.1'
-    //testImplementation 'org.jobrunr:jobrunr:8.0.1'
-
 }
 
 test {
