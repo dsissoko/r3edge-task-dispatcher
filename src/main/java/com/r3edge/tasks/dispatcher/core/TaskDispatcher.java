@@ -1,5 +1,8 @@
 package com.r3edge.tasks.dispatcher.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.cloud.context.scope.refresh.RefreshScopeRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -48,6 +51,42 @@ public class TaskDispatcher {
 			log.error("💥 Erreur lors de l'exécution de la tâche {}", task.getId(), e);
 		}
 	}
+	
+	/**
+	 * Extrait les taches de configuration.
+	 * et les dispatch pour exécution immédiate.
+	 */
+	public void prepareDispatch() {
+	    // 1. Dispatch des tâches fictives de config
+	    taskConfiguration.getDefinitions().stream()
+	        .filter(td -> td.getConfigHandler() != null && !td.getConfigHandler().isBlank())
+	        .forEach(this::dispatchConfigTask);
+
+	    // 2. Dispatch de toutes les tâches, y compris celles avec configHandler
+	    taskConfiguration.getDefinitions().forEach(this::dispatch);
+	}
+
+	private void dispatchConfigTask(TaskDescriptor td) {
+	    // Construire un task fictif avec le handler configHandler
+		Map<String, Object> metaWithParent = new HashMap<>(td.getMeta() != null ? td.getMeta() : Map.of());
+		metaWithParent.put("parentTaskId", td.getId());
+
+		TaskDescriptor configTask = TaskDescriptor.builder()
+		    .id(td.getId() + "-config")
+		    .handler(td.getConfigHandler())
+		    .enabled(true)
+		    .meta(metaWithParent)
+		    .build();
+
+	    log.info("⚙️ Dispatch de la tâche '{}' pour configuration de '{}'", configTask.getId(), td.getId());
+
+	    try {
+	        IFireAndForgetExecutor executor = strategyRouter.resolveExecutor(configTask);
+	        executor.execute(configTask);
+	    } catch (Exception e) {
+	        log.error("💥 Erreur lors de la configuration de la tâche '{}'", configTask.getId(), e);
+	    }
+	}
 
 	/**
 	 * Événement déclenché au démarrage du serveur web. Permet de déclencher
@@ -58,7 +97,7 @@ public class TaskDispatcher {
 	@EventListener(WebServerInitializedEvent.class)
 	public void onApplicationEvent(WebServerInitializedEvent event) {
 		log.info("🔄 Démarrage du service de dispatch.");
-		taskConfiguration.getDefinitions().forEach(this::dispatch);
+		prepareDispatch();
 	}
 
 	/**
@@ -79,7 +118,7 @@ public class TaskDispatcher {
 	public void refreshTasks() {
 		log.info("🔁 Refresh complet des tâches...");
 		cleanupObsoleteTasks();
-		taskConfiguration.getDefinitions().forEach(this::dispatch);
+		prepareDispatch();
 		log.info("✅ Refresh terminé.");
 	}
 

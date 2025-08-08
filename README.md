@@ -50,7 +50,7 @@ repositories {
 dependencies {
     ...
     
-    implementation "com.r3edge:r3edge-task-dispatcher:0.2.2"
+    implementation "com.r3edge:r3edge-task-dispatcher:0.2.3"
     implementation 'org.springframework.boot:spring-boot-starter-web'
     
     // Les dépendances suivante sont optionnelles mais nécessaires pour bénéficier de l'implémentation jobrunr
@@ -93,6 +93,7 @@ r3edge:
     definitions:
       - id: testJobRunrFireAndForgetDatacollectOK     # id unique   
         strategy: jobrunr                             # default, jobrunr, hazelcast
+        configHandler: pre-config-handler             # handler optionnel exécuté avant la tâche principale pour préparation
         handler: jobrunrOK                            # nom du handler de tâche à exécuter
         enabled: true                                 # si false, alors la tâche ne sera pas exécutée, true par défaut
         #at: 2025-07-31T16:03:00Z                     # ou 2025-07-31T16:03:00+02:00 Pour une tâche Fire and Forget mais différé au moment spécifié (format  ISO 8601)
@@ -108,7 +109,7 @@ r3edge:
 > ⚠️ cron et at ne sont pas à déclarer sur la même tâche
 
 
-### Implémenter le Handler:
+### Implémenter le Handler (pour la :
 
 ```java
 package com.example.demo;
@@ -131,7 +132,7 @@ public class JobRunrDataCollectHandler implements TaskHandler {
 
     @Override
     public String getName() {
-        return "jobrunrOK";
+        return "jobrunrOK";// correspond au champ handler ou configHandler
     }
 
     @Override

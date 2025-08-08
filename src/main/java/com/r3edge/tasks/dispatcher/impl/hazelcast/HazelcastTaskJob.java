@@ -25,12 +25,15 @@ public class HazelcastTaskJob implements Runnable, Serializable {
 	 */
     private final TaskDescriptor taskDescriptor;
     private transient ApplicationContext ctx;
-
+	/**
+	 * Service d'exécution dynamique des handlers.
+	 */    
+    private final TaskInvokerService invoker;
 
     @Override
     public void run() {
         // Récupère ton bean Spring (statiquement ou via ServiceLocator)
-    	TaskInvokerService invoker = ctx.getBean(TaskInvokerService.class);
+    	//TaskInvokerService invoker = ctx.getBean(TaskInvokerService.class);
         invoker.execute(taskDescriptor);
     }
 }

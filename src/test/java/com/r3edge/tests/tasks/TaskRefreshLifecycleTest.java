@@ -66,7 +66,7 @@ public class TaskRefreshLifecycleTest {
         // THEN: on a bien appelé les bons composants
         verify(mockExecutor).cancel(any());
         verify(mockScheduler).unscheduleById(any());
-        verify(taskConfiguration).getDefinitions();
+        verify(taskConfiguration, times(2)).getDefinitions();
         verify(strategyRouter, times(2)).resolveExecutor(any());
         verify(strategyRouter, times(2)).resolveScheduler(any());
     }

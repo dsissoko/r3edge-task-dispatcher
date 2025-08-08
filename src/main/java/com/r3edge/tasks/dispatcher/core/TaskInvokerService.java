@@ -13,14 +13,14 @@ public class TaskInvokerService {
 	private final TaskHandlerRegistry registry;
 
 	/**
-	 * Exécute immédiatement une tâche avec instrumentation et le logger fourni.
+	 * Exécute immédiatement une tâche.
 	 * 
 	 * @param task   La tâche à exécuter.
 	 */
 	public void execute(TaskDescriptor task) {
 		// Résolution du handler en fonction du type de tâche
 		TaskHandler handler = registry.getHandler(task.getHandler()).orElseThrow(
-				() -> new IllegalStateException("Aucun handler pour le type de tâche : " + task.getHandler()));
+				() -> new IllegalStateException("Aucun handler pour la tâche: " + task.getId() +", handler: " + task.getHandler()));
 		// Toujours instrumentation (pipeline listener)
 		Runnable r = createRunnable(task, handler);
 		r.run();

@@ -3,6 +3,7 @@ package com.r3edge.tasks.dispatcher.core;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -61,17 +62,42 @@ public class TaskDescriptorsProperties {
     }
 
     /**
-     * Retourne les métadonnées associées à une tâche, identifiée par son handler.
+     * Retourne les métadonnées associées à une tâche, identifiée par son handler,
+     * sous forme de {@code Map<String, Object>}, permettant de gérer des valeurs complexes
+     * (ex: String, listes, objets, etc.).
      *
      * @param type le nom du handler de la tâche recherchée
-     * @return les métadonnées de la tâche ou null si non trouvée
+     * @return les métadonnées de la tâche sous forme générique ou {@code null} si aucune tâche correspondante
      */
-	public Map<String, String> getMetaForTask(String type) {
-	    if (type == null) return null;
-	    return definitions.stream()
-	            .filter(task -> type.equals(task.getHandler()))
-	            .findFirst()
-	            .map(TaskDescriptor::getMeta)
-	            .orElse(null);
-	}
+    public Map<String, Object> getMetaForTaskAsObject(String type) {
+        if (type == null) return null;
+        return definitions.stream()
+                .filter(task -> type.equals(task.getHandler()))
+                .findFirst()
+                .map(TaskDescriptor::getMeta)
+                .orElse(null);
+    }
+    
+    /**
+     * Retourne les métadonnées associées à une tâche, identifiée par son handler,
+     * en filtrant uniquement les entrées dont la valeur est de type {@code String}.
+     * 
+     * Cette méthode est maintenue pour assurer la compatibilité avec l'ancien code
+     * qui attend une {@code Map<String, String>}.
+     *
+     * @param type le nom du handler de la tâche recherchée
+     * @return une {@code Map<String, String>} contenant uniquement les métadonnées
+     *         dont la valeur est une chaîne, ou {@code null} si aucune tâche correspondante
+     */
+    public Map<String, String> getMetaForTask(String type) {
+        Map<String, Object> meta = getMetaForTaskAsObject(type);
+        if (meta == null) return null;
+        // filtrer uniquement les entrées dont la valeur est String
+        return meta.entrySet().stream()
+                .filter(e -> e.getValue() instanceof String)
+                .collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    e -> (String) e.getValue()
+                ));
+    }
 }

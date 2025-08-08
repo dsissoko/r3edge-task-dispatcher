@@ -12,6 +12,7 @@ import com.hazelcast.scheduledexecutor.IScheduledExecutorService;
 import com.r3edge.tasks.dispatcher.core.IFireAndForgetExecutor;
 import com.r3edge.tasks.dispatcher.core.TaskDescriptor;
 import com.r3edge.tasks.dispatcher.core.TaskDescriptorsProperties;
+import com.r3edge.tasks.dispatcher.core.TaskInvokerService;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class HazelcastFireAndForgetExecutor implements IFireAndForgetExecutor {
 
     private final TaskDescriptorsProperties taskConfiguration;
     private final IScheduledExecutorService scheduledExecutorService;
+    private final TaskInvokerService invoker;
 
     // Map taskId -> ScheduledFuture<?> (références distribuées !)
     private final Map<String, ScheduledFuture<?>> distributedFutures = new ConcurrentHashMap<>();
@@ -50,13 +52,13 @@ public class HazelcastFireAndForgetExecutor implements IFireAndForgetExecutor {
                 }
             }
             future = scheduledExecutorService.schedule(
-                    new HazelcastTaskJob(task),
+                    new HazelcastTaskJob(task, invoker),
                     delayMillis,
                     TimeUnit.MILLISECONDS
             );
             log.info("✅ Tâche {} planifiée avec Hazelcast pour exécution différée à {}", taskId, at);
         } else {
-        	future = scheduledExecutorService.schedule(new HazelcastTaskJob(task), 0, TimeUnit.MILLISECONDS);
+        	future = scheduledExecutorService.schedule(new HazelcastTaskJob(task, invoker), 0, TimeUnit.MILLISECONDS);
 
             log.info("✅ Tâche {} envoyée en Fire & Forget via Hazelcast", taskId);
         }

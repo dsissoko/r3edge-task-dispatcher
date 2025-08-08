@@ -1,4 +1,3 @@
-// TaskHandlerRegistryTest.java
 package com.r3edge.tests.tasks;
 
 import static org.assertj.core.api.Assertions.assertThat;

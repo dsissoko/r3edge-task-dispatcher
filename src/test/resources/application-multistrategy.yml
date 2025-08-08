@@ -18,6 +18,7 @@ r3edge:
 
       - id: task-001bis
         strategy: default
+        configHandler: configTest
         handler: print
         enabled: true
         meta:

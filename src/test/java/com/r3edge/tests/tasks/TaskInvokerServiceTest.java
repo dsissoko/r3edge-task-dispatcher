@@ -65,7 +65,7 @@ class TaskInvokerServiceTest {
 
         assertThatThrownBy(() -> invoker.execute(task))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Aucun handler pour le type");
+                .hasMessageContaining("Aucun handler pour la tâche");
     }
 
     @Test

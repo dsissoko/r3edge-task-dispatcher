@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'com.r3edge'
-version = '0.2.2-SNAPSHOT'
+version = '0.2.3'
 
 base {
     archivesName = 'r3edge-task-dispatcher'
@@ -64,6 +64,7 @@ dependencies {
     // Spring minimum requis pour la lib
     //compileOnly 'org.springframework.cloud:spring-cloud-context:4.3.0'
     api 'org.springframework.cloud:spring-cloud-context:4.1.2'
+    api 'org.yaml:snakeyaml:2.4'
     compileOnly  'org.springframework.boot:spring-boot-starter'
     compileOnly 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
     // Gestion des tâches
@@ -72,9 +73,9 @@ dependencies {
     compileOnly 'com.hazelcast:hazelcast-spring:5.4.0'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.mockito:mockito-junit-jupiter'
-    testImplementation 'org.assertj:assertj-core'
+    //testImplementation 'org.junit.jupiter:junit-jupiter'
+    //testImplementation 'org.mockito:mockito-junit-jupiter'
+    //testImplementation 'org.assertj:assertj-core'
     // Pour activer @Slf4j dans les tests
     testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.projectlombok:lombok'    
